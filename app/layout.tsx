@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Inknut_Antiqua } from "next/font/google";
 import "./globals.css";
+import NavbarCustom from "./ui/navbar/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
+const inknut = Inknut_Antiqua({
+  subsets: ["latin"],
+  weight: "300"
+});
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,9 +20,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+  return (    
+    <html lang="en">      
+      <body className={inknut.className}>
+        <NavbarCustom/>
+        {children}
+      </body>
     </html>
   );
 }
