@@ -9,7 +9,7 @@ export default function NavbarCustom () {
                 <p className="ml-3 font-extrabold text-[#F8EDD9] text-xl">Mesjid Nurul Hidayah</p>                
             </Link>  
         </NavbarBrand>     
-        <NavbarContent className="flex space-x-4 text-xl">
+        <NavbarContent className="flex space-x-20 text-xl">
             <NavbarItem>
                 <Link href="/">
                     Home
