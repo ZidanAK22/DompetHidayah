@@ -57,7 +57,7 @@ export default function Home() {
             memberikan infaq dan sedekah 
             ke berbagai program sosial
           </p>
-          <Link className="text-[#ceef47]" href="/">            
+          <Link className="text-[#35910b] dark:text-[#ceef47] italic text-lg" href="/">            
               Detail        
           </Link>
         </div>        
