@@ -1,43 +1,59 @@
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Image} from "@nextui-org/react";
+import {Link, Image} from "@nextui-org/react";
 
 export default function NavbarCustom () {
     return (
-    <Navbar className="flex flex-row items-center justify-between bg-[#327039] w-full">
-        <NavbarBrand className="flex bg">      
-            <Link href="/" className="flex">
-                <Image className="m-1" src="/logomasjid.png" width={96}/>                
-                <p className="ml-3 font-extrabold text-[#F8EDD9] text-xl">Mesjid Nurul Hidayah</p>                
-            </Link>  
-        </NavbarBrand>     
-        <NavbarContent className="flex space-x-20 text-xl">
-            <NavbarItem>
-                <Link href="/">
-                    Home
-                </Link>
-            </NavbarItem>
-            <NavbarItem>
-                <Link href="/service">
-                    Service
-                </Link>
-            </NavbarItem>
-            <NavbarItem>
+    // <Navbar position="static" className="bg-[#327039] py-4" maxWidth="full">
+    //     <NavbarBrand>
+    //         <Image src="/logomasjid.png" width={128}/>
+    //         <span className="text-xl"> Mesjid Nurul Hidayah </span>
+    //     </NavbarBrand>
+        
+    //         <NavbarContent justify="center">
+    //             <Link>
+    //                 Home
+    //             </Link>
+    //                 Jasa Kami
+    //             <Link>
+    //             </Link>
+    //             <Link>
+    //                 Tentang Kami
+    //             </Link>
+    //         </NavbarContent>        
+        
+
+    //     <NavbarContent justify="end">
+    //         <Link>
+    //             Log In
+    //         </Link>
+    //         <Link>
+    //             Log Out
+    //         </Link>
+    //     </NavbarContent>
+    // </Navbar>    
+    <div className="sticky top-0 bg-[#327039] flex flex-rpw items-center text-xl px-12 py-4">
+        <div className="flex items-center">
+            <Image src="/logomasjid.png" width={128}/>
+            <span className="text-[#F8EDD9] font-extrabold"> Mesjid Nurul Hidayah </span>
+        </div>
+        <div className="flex-grow flex space-x-12 justify-center">
+            <Link href="/">
+                Home
+            </Link>                
+            <Link href="/services">
+                Services
+            </Link>
             <Link href="/about">
-                    About Us
-                </Link>
-            </NavbarItem>
-        </NavbarContent>
-        <NavbarContent className="flex space-x-4 mr-10 text-xl">
-            <NavbarItem className="">
-                <Link href="/products">
-                    Log In
-                </Link>                
-            </NavbarItem>
-            <NavbarItem>
-                <Link href="/products">
-                    Sign Up
-                </Link>
-            </NavbarItem>     
-        </NavbarContent>
-    </Navbar>
+                About Us
+            </Link>
+        </div>
+        <div className="flex space-x-12">
+            <Link>
+                Sign In
+            </Link>
+            <Link>
+                Log Out
+            </Link>
+        </div>
+    </div>
     );
 }
