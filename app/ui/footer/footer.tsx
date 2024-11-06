@@ -12,7 +12,7 @@ export default function FooterCustom() {
             
             {/* Contact Information */}
             <div>
-                <div className="text-[#F8EDD9]">
+                <div className="text-[text]">
                     <div className={lilita.className}>
                         <p className="text-2xl">Dompet Hidayah</p>
                     </div>                    
