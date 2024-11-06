@@ -8,7 +8,7 @@ const lilita = Lilita_One( {
 
 export default function FooterCustom() {
     return (
-        <div className="bg-[#327039] w-full flex flex-row p-10 justify-between mt-auto">                        
+        <div className="bg-primary w-full flex flex-row p-10 justify-between mt-auto">                        
             
             {/* Contact Information */}
             <div>
