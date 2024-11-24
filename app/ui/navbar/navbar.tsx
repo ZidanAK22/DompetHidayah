@@ -47,11 +47,11 @@ export default function NavbarCustom () {
             </Link>
         </div>
         <div className="flex space-x-12">
-            <Link>
-                Sign In
+            <Link href="/login">
+                Log In
             </Link>
-            <Link>
-                Log Out
+            <Link href="/signup">
+                Sign Up
             </Link>
         </div>
     </nav>
