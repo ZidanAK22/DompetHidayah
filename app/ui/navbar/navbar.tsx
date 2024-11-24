@@ -30,7 +30,7 @@ export default function NavbarCustom () {
     //         </Link>
     //     </NavbarContent>
     // </Navbar>    
-    <nav className="sticky top-0 bg-[#327039] flex flex-rpw items-center text-xl px-12 py-4 z-50">
+    <nav className="sticky top-0 bg-primary flex flex-rpw items-center text-xl px-12 py-4 z-50">
         <div className="flex items-center">
             <Image src="/logomasjid.png" width={128}/>
             <span className="text-[#F8EDD9] font-extrabold"> Mesjid Nurul Hidayah </span>
