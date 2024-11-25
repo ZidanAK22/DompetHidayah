@@ -23,36 +23,40 @@ export default function LoginPage() {
             {/* Input Form */}
             <div className="min-w-full bg-secondary flex justify-center items-center rounded-xl mt-8 text-[#000000] px-6 py-12">
                 <div className="flex flex-col gap-6 max-w-xl w-full">
-                    <Input
-                        type="email"
-                        variant="bordered"
-                        label="Email"
-                        placeholder="Masukkan Email Disini"
-                    />
-                    <div className="flex flex-col text-right">
-                    <Input
-                        radius="lg"
-                        variant="bordered"
-                        label="Password"
-                        endContent={
-                            <button
-                                className="focus:outline-none flex items-center"
-                                type="button"
-                                onClick={toggleVisibility}
-                                aria-label="toggle password visibility"
-                            >
-                                {isVisible ? (                                    
-                                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none mt-1" />                                    
-                                ) : (
-                                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none mt-1" />
-                                )}
-                            </button>
-                        }
-                        type={isVisible ? "text" : "password"}
-                    />
-                    <Link>
-                        Forgot Password?
-                    </Link>
+                    {/* Input Email */}
+                    <div className="flex flex-col gap-2 text-left">
+                        <label className="text-sm font-medium">Email</label>
+                        <Input
+                            type="email"
+                            variant="bordered"
+                            placeholder="Masukkan Email Disini"
+                        />
+                    </div>
+                    {/* Input Password */}
+                    <div className="flex flex-col gap-2 text-left relative">
+                        <label className="text-sm font-medium">Password</label>
+                        <Input
+                            radius="lg"
+                            variant="bordered"
+                            placeholder="Masukkan Password Disini"
+                            type={isVisible ? "text" : "password"}
+                            className="pr-12" // Tambahkan padding-right agar tidak overlap dengan ikon
+                        />
+                        <button
+                            className="absolute top-10 right-4 focus:outline-none flex items-center"
+                            type="button"
+                            onClick={toggleVisibility}
+                            aria-label="toggle password visibility"
+                        >
+                            {isVisible ? (                                    
+                                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />                                    
+                            ) : (
+                                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                            )}
+                        </button>
+                        <Link>
+                            Forgot Password?
+                        </Link>
                     </div>
                 </div>
             </div>
