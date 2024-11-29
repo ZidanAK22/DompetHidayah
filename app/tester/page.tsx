@@ -30,7 +30,7 @@ export default function Tester() {
         <ul className="h-1/2 w-1/2">
           {upz.map((item) => (
             <li key={item.id_upz}>            
-              {item.id_upz}: {item.nama_upz} - Created At {item.created_at} 
+              {item.id_upz}: {item.nama_upz}
             </li>
           ))}
         </ul>
