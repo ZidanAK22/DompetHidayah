@@ -2,8 +2,9 @@
 import { useState } from "react";
 import { Inter } from "next/font/google";
 import { Input, Link, Button } from "@nextui-org/react";
-import { EyeFilledIcon } from "../ui/icon/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "../ui/icon/EyeSlashFilledIcon";
+import { EyeFilledIcon } from "../../ui/icon/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "../../ui/icon/EyeSlashFilledIcon";
+import { signup } from "../login/actions";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,18 @@ export default function SignUpPage() {
         setIsMatching(password === e.target.value);
     };
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.currentTarget);
+        // Add your sign-up logic here
+        if (isMatching) {
+            signup(formData)
+        } else {
+            console.log("Passwords do not match");
+        }
+    };
+
     return (
         <div className="min-h-[50vh] flex flex-col items-center justify-center bg-primary px-4 py-8 mt-12 mx-32 rounded-xl">
             {/* Header */}
@@ -29,7 +42,9 @@ export default function SignUpPage() {
             </div>
 
             {/* Input Form */}
-            <div className="min-w-full bg-secondary flex justify-center items-center rounded-xl mt-8 text-[#000000] px-6 py-12">
+            <form 
+                onSubmit={handleSubmit} 
+                className="min-w-full bg-secondary flex flex-col justify-center items-center rounded-xl mt-8 text-[#000000] px-6 py-12">
                 <div className="flex flex-col gap-6 max-w-xl w-full">
                     {/* Input Email */}
                     <div className="flex flex-col gap-2 text-left w-full">
@@ -40,6 +55,7 @@ export default function SignUpPage() {
                             variant="bordered"
                             placeholder="Masukkan Email Disini"
                             className="w-full"
+                            required
                         />
                     </div>
                     {/* Input Password */}
@@ -54,6 +70,7 @@ export default function SignUpPage() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full border-none focus:ring-0 focus:border-transparent"
+                                required
                             />
                             <button
                                 className="ml-2 focus:outline-none flex items-center"
@@ -81,6 +98,7 @@ export default function SignUpPage() {
                                 value={confirmPassword}
                                 onChange={checkPassword}
                                 className="w-full border-none focus:ring-0 focus:border-transparent"
+                                required
                             />
                             <button
                                 className="ml-2 focus:outline-none flex items-center"
@@ -103,11 +121,11 @@ export default function SignUpPage() {
                             )
                         ) : null}
                     </div>
-                    <Button className="bg-accent rounded-md px-4 py-2 justify-center">
+                    <Button type="submit" className="bg-accent rounded-md px-4 py-2 justify-center">
                         Sign Up
                     </Button>
                 </div>
-            </div>
+            </form>
         </div>
     );
 }

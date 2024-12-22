@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Inknut_Antiqua } from "next/font/google";
-import "./globals.css";
-import NavbarCustom from "./ui/navbar/navbar";
-import FooterCustom from "./ui/footer/footer";
+import "../globals.css"
+import NavbarCustom from "../ui/navbar/navbar";
+import FooterCustom from "../ui/footer/footer";
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 const inknut = Inknut_Antiqua({
@@ -22,15 +23,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (    
-    <html lang="en">      
+  return (
+    <html lang="en">
       <body className={`${inknut.className} min-h-screen`}>
-        <NavbarCustom/>
-        <main className="lg:px-24">
-          {children}       
-        </main>        
-        <FooterCustom/> 
-      </body>      
+        <NavbarCustom />        
+          <main className="lg:px-24">
+            {children}
+          </main>        
+        <FooterCustom />
+      </body>
     </html>
   );
 }

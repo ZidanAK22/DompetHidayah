@@ -1,8 +1,8 @@
 'use client';
 
-import { supabase } from "../utils/supabase/supabase_client";
+import { supabase } from "../../utils/supabase/supabase_client";
 import { useState, useEffect } from "react";
-import { UpzPengumpulan } from "../models/zakat_definitions";
+import { UpzPengumpulan } from "../../models/zakat_definitions";
 
 export default function Tester() {
   const [upz, setUpz] = useState<UpzPengumpulan[] | null>(null);
