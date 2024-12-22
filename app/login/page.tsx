@@ -111,7 +111,7 @@ export default function LoginPage() {
                         )}
                     </button>
                 </div>
-
+              
                 <div className="flex space-x-8 justify-center">
                     <button formAction={login} className="bg-accent rounded-lg p-4">Log in</button>
                     <button formAction={signup} className="bg-accent rounded-lg p-4">Sign up</button>
