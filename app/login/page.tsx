@@ -1,7 +1,7 @@
 'use client'
 import { useState } from "react";
 import { Inter } from "next/font/google";
-import { Input, Link } from "@nextui-org/react";
+import { Input, Link, Button } from "@nextui-org/react";
 import { EyeFilledIcon } from "../ui/icon/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../ui/icon/EyeSlashFilledIcon";
 
@@ -33,31 +33,36 @@ export default function LoginPage() {
                         />
                     </div>
                     {/* Input Password */}
-                    <div className="flex flex-col gap-2 text-left relative">
+                    <div className="flex flex-col gap-2 text-left">
                         <label className="text-sm font-medium">Password</label>
-                        <Input
-                            radius="lg"
-                            variant="bordered"
-                            placeholder="Masukkan Password Disini"
-                            type={isVisible ? "text" : "password"}
-                            className="pr-12" // Tambahkan padding-right agar tidak overlap dengan ikon
-                        />
-                        <button
-                            className="absolute top-10 right-4 focus:outline-none flex items-center"
-                            type="button"
-                            onClick={toggleVisibility}
-                            aria-label="toggle password visibility"
-                        >
-                            {isVisible ? (                                    
-                                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />                                    
-                            ) : (
-                                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                            )}
-                        </button>
+                        <div className="flex items-center w-full rounded-lg">
+                            <Input
+                                radius="lg"
+                                variant="bordered"
+                                placeholder="Masukkan Password Disini"
+                                type={isVisible ? "text" : "password"}
+                                className="flex-grow border-none focus:ring-0 focus:border-transparent"
+                            />
+                            <button
+                                className="px-4 focus:outline-none flex items-center"
+                                type="button"
+                                onClick={toggleVisibility}
+                                aria-label="toggle password visibility"
+                            >
+                                {isVisible ? (                                    
+                                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />                                    
+                                ) : (
+                                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                )}
+                            </button>
+                        </div>
                         <Link>
                             Forgot Password?
                         </Link>
                     </div>
+                    <Button className="bg-accent rounded-md px-4 py-2 justify-center">
+                        Login
+                    </Button>
                 </div>
             </div>
         </div>
