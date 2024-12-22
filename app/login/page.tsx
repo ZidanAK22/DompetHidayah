@@ -15,7 +15,7 @@ export default function LoginPage() {
     return (
         <div className="min-h-[50vh] flex flex-col items-center justify-center bg-primary px-4 py-8 mt-12 mx-32 rounded-xl">
             {/* Header */}
-            <div className={`${inter.className} flex flex-col items-center`}>
+            <div className={inter.className + " flex flex-col items-center"}>
                 <h1 className="text-[32px] font-bold">Welcome Back</h1>
                 <span className="opacity-50">Login to your account!</span>
             </div>
