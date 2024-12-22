@@ -1,21 +1,15 @@
-'use client'
-
+import { useEffect, useState } from "react";
+import { Link, Image, Button } from "@nextui-org/react";
+import { createClient } from "@/app/utils/supabase/supabase_server";
+import { User } from "@supabase/supabase-js";
+import { BarLoader } from "react-spinners";
 import { redirect } from "next/navigation";
-import { Link, Image} from "@nextui-org/react";
-import { supabase } from "@/app/utils/supabase/supabase_client";
 
-export default async function NavbarCustom() {    
-    const { data, error } = await supabase.auth.getUser()
-    if (error) {
-        redirect(`/login?error=${encodeURIComponent(error.message)}`)
-    }
+export default async function NavbarCustom() {
+    const supabase = await createClient();
 
-    async function HandleSignOut() {
-        const { error } = await supabase.auth.signOut()
-        if (error) {
-            console.log(error);
-        }
-    }
+    const { data: { user } } = await supabase.auth.getUser()
+
 
     return (
         <nav className="sticky top-0 bg-primary flex flex-row items-center text-xl px-12 py-4 z-50">
@@ -38,13 +32,17 @@ export default async function NavbarCustom() {
                 </Link>
             </div>
             <div className="flex space-x-12">
-                {data?.user ? (
+                {user ? (
                     <>
                         <p>User Img</p>
-                        <p>Welcome {data?.user.email}</p>
-                        <Link href="" className="text-accent">
-                            Log Out
-                        </Link>
+                        <p>Welcome {user.email}</p>
+                        <div>
+                            <form action="/auth/signout" method="post">
+                                <button className="button block" type="submit">
+                                    Sign out
+                                </button>
+                            </form>
+                        </div>
                     </>
                 ) : (
                     <>
@@ -53,10 +51,10 @@ export default async function NavbarCustom() {
                         </Link>
                         <Link href="/signup" className="text-accent">
                             Sign Up
-                        </Link>
+                        </Link>                        
+                        
                     </>
-                )
-                }
+                )}
             </div>
         </nav>
     );

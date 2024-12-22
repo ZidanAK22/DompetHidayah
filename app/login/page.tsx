@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Inter } from "next/font/google";
-import { Input, Link, Button } from "@nextui-org/react";
 import { EyeFilledIcon } from "../ui/icon/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../ui/icon/EyeSlashFilledIcon";
 import { login, signup } from "./actions";
