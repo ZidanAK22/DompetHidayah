@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Inter } from "next/font/google";
-import { EyeFilledIcon } from "../ui/icon/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "../ui/icon/EyeSlashFilledIcon";
+import { EyeFilledIcon } from "../../ui/icon/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "../../ui/icon/EyeSlashFilledIcon";
 import { login, signup } from "./actions";
 
 const inter = Inter({ subsets: ["latin"] });

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Inknut_Antiqua } from "next/font/google";
-import "./globals.css";
-import NavbarCustom from "./ui/navbar/navbar";
-import FooterCustom from "./ui/footer/footer";
+import "../globals.css"
+import NavbarCustom from "../ui/navbar/navbar";
+import FooterCustom from "../ui/footer/footer";
 import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });

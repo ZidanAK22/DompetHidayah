@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { Inter } from "next/font/google";
 import { Input, Link, Button } from "@nextui-org/react";
-import { EyeFilledIcon } from "../ui/icon/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "../ui/icon/EyeSlashFilledIcon";
+import { EyeFilledIcon } from "../../ui/icon/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "../../ui/icon/EyeSlashFilledIcon";
 import { signup } from "../login/actions";
 
 const inter = Inter({ subsets: ["latin"] });

@@ -4,7 +4,7 @@
 import { Image } from "@nextui-org/image";
 import { Link } from "@nextui-org/link";
 import { Limelight } from "next/font/google";
-import FooterCustom from "./ui/footer/footer";
+import FooterCustom from "../ui/footer/footer";
 // import { motion } from 'framer-motion';
 
 const lime = Limelight({
