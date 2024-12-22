@@ -99,7 +99,7 @@ export default function SignUpPage() {
                             isMatching ? (
                                 <p className="text-primary">Password Match</p>
                             ) : (
-                                <p className="text-[#990000]">Password Doesn't Match</p>
+                                <p className="text-[#990000]">Password Doesn&#39;t Match</p>
                             )
                         ) : null}
                     </div>
