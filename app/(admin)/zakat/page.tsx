@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from './ZakatPage.module.css';
+import styles from './zakat.module.css';
 
 interface ZakatData {
     id: number;
