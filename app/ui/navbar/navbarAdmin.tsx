@@ -8,9 +8,9 @@ export default function NavbarAdmin() {
     const [profileDropdown, setProfileDropdown] = useState(false);
 
     return (
-        <div className="flex flex-col min-h-screen">
+        <>
             {/* Navbar */}
-            <nav className="sticky top-0 bg-primary flex flex-row items-center text-xl px-12 py-4 z-50">
+            <nav className="sticky top-0 bg-primary flex flex-row items-center text-xl px-12 py-4 z-50 mb-12">
                 <Link className="flex items-center" href="/dashboardAdmin">                    
                     <Image src="/logomasjid.png" width={128} />
                     <span className="text-[#F8EDD9] font-extrabold"> Mesjid Nurul Hidayah </span>
@@ -53,6 +53,6 @@ export default function NavbarAdmin() {
                     </div>
                 )}
             </nav>
-        </div>
+        </>
         );
     }

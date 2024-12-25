@@ -28,7 +28,7 @@ const lime = Limelight({
 //   visible: { opacity: 1, y: 0}
 // }
 
-export default function Home() {
+export default function Index() {
   return (
     <div className="flex flex-col mt-10 items-center">
 
@@ -73,7 +73,7 @@ export default function Home() {
         Apa yang Kamu Miliki.
       </p>
 
-      <p className="mt-20 -mb-2 bg-[#F8EDD9] text-black rounded-xl p-10 z-10 text-xl">
+      <p className="mt-20 -mb-2 bg-[#F8EDD9] text-text rounded-xl p-10 z-10 text-xl">
         Hitung dan Tunaikan Kewajiban
       </p>
 
