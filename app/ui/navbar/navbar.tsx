@@ -26,10 +26,7 @@ export default async function NavbarCustom() {
                 </Link>
                 <Link href="/about" className="text-accent">
                     About Us
-                </Link>
-                <Link href="/tester" className="text-accent ml-4">
-                    Tester
-                </Link>
+                </Link>                
             </div>
             <div className="flex space-x-12">
                 {user ? (

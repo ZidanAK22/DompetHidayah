@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import styles from './zakat.module.css';
+import { supabase } from "@/app/utils/supabase/supabase_client";
 
 interface ZakatData {
     id: number;
@@ -18,6 +19,42 @@ interface ZakatData {
     totalMustahik: number;
     keterangan: string;
 }
+
+interface SupabaseZakatData {
+    id_upz: string;
+    nama_upz: string; // Same as ZakatData
+    jumlah_muzaki: number;
+    beras_muzaki: number;
+    uang_muzaki: number;
+    nilai_beras_muzaki: number;
+    total_muzaki: number;
+    jumlah_mustahik: number;
+    beras_mustahik: number;
+    uang_mustahik: number;
+    nilai_beras_mustahik: number;
+    total_mustahik: number;
+    keterangan: string; // Same as ZakatData
+}
+
+const mapToSupabaseData = (data: ZakatData[]): SupabaseZakatData[] => {
+    return data.map(item => ({
+        id_upz: item.upz, // Map `id` to `id_upz`
+        nama_upz: item.upz, // Map `upz` to `nama_upz`
+        jumlah_muzaki: item.jumlahMuzaki,
+        beras_muzaki: item.berasMuzaki,
+        uang_muzaki: item.uangMuzaki,
+        nilai_beras_muzaki: item.nilaiBerasMuzaki,
+        total_muzaki: item.totalMuzaki,
+        jumlah_mustahik: item.jumlahMustahik,
+        beras_mustahik: item.berasMustahik,
+        uang_mustahik: item.uangMustahik,
+        nilai_beras_mustahik: item.nilaiBerasMustahik,
+        total_mustahik: item.totalMustahik,
+        keterangan: item.keterangan,
+    }));
+};
+
+
 
 const ZakatPage = () => {
     const [formData, setFormData] = useState<Omit<ZakatData, "id">>({
@@ -44,6 +81,19 @@ const ZakatPage = () => {
             [name]: name.includes("Muzaki") || name.includes("Mustahik") ? parseFloat(value) || 0 : value,
         }));
     };
+
+    const insertZakatList = async (data: SupabaseZakatData[]): Promise<void> => {
+        try {
+            const { error } = await supabase.from('zakat').insert(data);
+            if (error) {
+                console.error('Error inserting data:', error.message);
+            } else {
+                console.log('Data inserted successfully');
+            }
+        } catch (err) {
+            console.error('Unexpected error:', err);
+        }
+    };    
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -73,7 +123,7 @@ const ZakatPage = () => {
             nilaiBerasMustahik: 0,
             totalMustahik: 0,
             keterangan: "",
-        });
+        });        
     };
 
     const handlePrint = () => {
@@ -83,7 +133,7 @@ const ZakatPage = () => {
         // Menambahkan logo dan header sebelum mencetak
         const printHeader = `
       <div class="print-header">
-        <img src="/logomajid.png" alt="Logo" style="width: 100px; height: auto; float: left; margin-right: 10px;" />
+        <img src="/logomasjid.png" alt="Logo" style="width: 100px; height: auto; float: left; margin-right: 10px;" />
         <h2 style="display: inline; font-size: 20px;">Data Zakat</h2>
       </div>
     `;
@@ -106,11 +156,17 @@ const ZakatPage = () => {
         }
     };
 
+    const handleUpload = (data: ZakatData[]) => {
+        const dataupload = mapToSupabaseData(data)
+
+        insertZakatList(dataupload);
+    }
+
     return (
-        <div className="text-gray-800">
-            <h1 className="text-center text-3xl font-bold mb-6 text-black">Form Input Data Zakat</h1>
+        <div className="flex flex-row space-x-12 text-gray-800 min-h-screen bg-secondary p-12 text-text rounded-3xl">
 
             <form onSubmit={handleSubmit} className="space-y-4">
+                <h1 className="text-center text-3xl font-bold mb-6 text-black">Form Input Data Zakat</h1>
                 <div className="space-y-2">
                     <label htmlFor="upz" className="font-semibold text-gray-700">UPZ Pengumpul:</label>
                     <input
@@ -206,14 +262,14 @@ const ZakatPage = () => {
                     ></textarea>
                 </div>
 
-                <button type="submit" className={`bg-blue-500 text-white py-2 px-6 rounded ${styles.button}`}>
+                <button type="submit" className={`bg-primary text-white py-2 px-6 rounded ${styles.button}`}>
                     Simpan
                 </button>
             </form>
 
-            <h2 className="text-2xl font-semibold mt-8">Tabel Data Zakat</h2>
             {zakatList.length > 0 ? (
                 <div className="table-container">
+                    <h2 className="text-2xl font-semibold mt-8 text-center">Tabel Data Zakat</h2>
                     <table id="zakat-table" className="w-full mt-4 border-collapse print-table">
                         <thead>
                             <tr>
@@ -275,7 +331,7 @@ const ZakatPage = () => {
                                     <td className="border p-3 text-center">{zakat.totalMustahik}</td>
                                     <td className="border p-3">{zakat.keterangan}</td>
                                     <td className="border p-3 text-center">
-                                        <button onClick={() => handleEdit(zakat.id)} className={`bg-blue-500 text-white py-2 px-10 rounded ${styles.button}`}>
+                                        <button onClick={() => handleEdit(zakat.id)} className={`bg-primary text-white py-2 px-10 rounded ${styles.button}`}>
                                             Edit
                                         </button>
                                     </td>
@@ -284,9 +340,12 @@ const ZakatPage = () => {
                         </tbody>
                     </table>
 
-                    <div className="print-button-container mt-4">
-                        <button onClick={handlePrint} className={`bg-blue-500 text-white py-2 px-6 rounded ${styles.button}`}>
+                    <div className="print-button-container mt-4 space-x-8">
+                        <button onClick={handlePrint} className={`bg-primary text-white py-2 px-6 rounded ${styles.button}`}>
                             Print Data
+                        </button>
+                        <button onClick={() =>handleUpload(zakatList)} className={`bg-primary text-white py-2 px-6 rounded ${styles.button}`}>
+                            Upload ke Database
                         </button>
                     </div>
                 </div>

@@ -10,8 +10,7 @@
 }
 
 /* Styling untuk tombol (Simpan dan Print Data) */
-.button {
-    background-color: #4CAF50; /* Green */
+.button {    
     color: white;
     padding: 10px 24px;
     border: none;
@@ -20,7 +19,7 @@
 }
 
 .button:hover {
-    background-color: #45a049;
+    background-color: --var();
 }
 
 /* Styling untuk area yang dicetak */
