@@ -28,10 +28,9 @@ export default async function NavbarCustom() {
                     About Us
                 </Link>                
             </div>
-            <div className="flex space-x-12">
+            <div className="flex justify-center space-x-2">
                 {user ? (
-                    <>
-                        <p>User Img</p>
+                    <>                        
                         <p>Welcome {user.email}</p>
                         <div>
                             <form action="/auth/signout" method="post">
