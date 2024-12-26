@@ -421,4 +421,4 @@ const AdminZakatPage = () => {
     );
 };
 
-export default ZakatPage;
+export default AdminZakatPage;
