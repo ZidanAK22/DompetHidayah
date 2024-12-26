@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styles from './zakat.module.css';
 import { supabase } from "@/app/utils/supabase/supabase_client";
+import DropdownInputForm from "@/app/ui/dropdown/dropdownInputForm";
 
 interface ZakatData {
     id: number;
@@ -89,6 +90,24 @@ const AdminZakatPage = () => {
     });
 
     const [zakatList, setZakatList] = useState<ZakatData[]>([]);
+    const [upzList, setUpzList] = useState<string[]>([]);
+
+
+    const fetchUpz = async () => {
+        try {
+            const { data, error } = await supabase.from('upz_pengumpulan').select('id_upz');
+            if (error) {
+                console.error('Error fetching UPZ data:', error.message);
+            } else if (data) {
+                const upzList = data.map((item) => item.id_upz); // Extract id_upz from each row
+                setUpzList(upzList); // Update state with the list of id_upz
+                console.log(upzList)
+            }
+        } catch (err) {
+            console.error('Unexpected error fetching UPZ data:', err);
+        }
+    };
+
 
     const fetchZakatData = async () => {
         try {
@@ -98,7 +117,7 @@ const AdminZakatPage = () => {
             } else if (data) {
                 const formattedData = mapFromSupabaseData(data as SupabaseZakatData[]);
                 setZakatList(formattedData);
-                console.log()
+                console.log('data zakat supabase : ', formattedData)
             }
         } catch (err) {
             console.error('Unexpected error:', err);
@@ -222,19 +241,28 @@ const AdminZakatPage = () => {
     }
 
     useEffect(() => {
-        fetchZakatData();
-    }, []);
+        const fetchData = async () => {
+            await Promise.all([fetchUpz(), fetchZakatData()]);
+        };
+
+        console.log(upzList)
+        console.log(zakatList)
+
+        fetchData();
+    }, []); // Runs on component mount
+
 
     return (
-        
 
-        <div className="flex flex-row space-x-12 text-gray-800 min-h-screen bg-secondary p-12 text-text rounded-3xl">
+
+        <div className="flex flex-row space-x-12 text-gray-800 min-h-screen bg-secondary p-12 text-text rounded-3xl mb-4">
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <h1 className="text-center text-3xl font-bold mb-6 text-black">Form Input Data Zakat</h1>
                 <div className="space-y-2">
                     <label htmlFor="upz" className="font-semibold text-gray-700">UPZ Pengumpul:</label>
                     <input
+                        list="upz-options"
                         type="text"
                         id="upz"
                         name="upz"
@@ -243,6 +271,11 @@ const AdminZakatPage = () => {
                         className={`w-full p-2 border border-gray-300 rounded ${styles.inputText}`}
                         required
                     />
+                    <datalist id="upz-options">
+                        {upzList.map((upz, index) => (
+                            <option key={index} value={upz} />
+                        ))}
+                    </datalist>
                 </div>
 
                 <h3 className="text-xl font-semibold mt-6 text-gray-800">Penerima</h3>
@@ -332,8 +365,10 @@ const AdminZakatPage = () => {
                 </button>
             </form>
 
+            <hr />
+
             {zakatList.length > 0 ? (
-                <div className="table-container">
+                <div className="table-container p-8">
                     <h2 className="text-2xl font-semibold mt-8 text-center">Tabel Data Zakat</h2>
                     <table id="zakat-table" className="w-full mt-4 border-collapse print-table">
                         <thead>
