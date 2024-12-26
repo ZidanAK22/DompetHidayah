@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from './zakat.module.css';
 import { supabase } from "@/app/utils/supabase/supabase_client";
 
@@ -54,7 +54,23 @@ const mapToSupabaseData = (data: ZakatData[]): SupabaseZakatData[] => {
     }));
 };
 
-
+const mapFromSupabaseData = (data: SupabaseZakatData[]): ZakatData[] => {
+    return data.map((item) => ({
+        id: parseInt(item.id_upz), // Map `id_upz` to `id`
+        upz: item.nama_upz,       // Map `nama_upz` to `upz`
+        jumlahMuzaki: item.jumlah_muzaki,
+        berasMuzaki: item.beras_muzaki,
+        uangMuzaki: item.uang_muzaki,
+        nilaiBerasMuzaki: item.nilai_beras_muzaki,
+        totalMuzaki: item.total_muzaki,
+        jumlahMustahik: item.jumlah_mustahik,
+        berasMustahik: item.beras_mustahik,
+        uangMustahik: item.uang_mustahik,
+        nilaiBerasMustahik: item.nilai_beras_mustahik,
+        totalMustahik: item.total_mustahik,
+        keterangan: item.keterangan,
+    }));
+};
 
 const ZakatPage = () => {
     const [formData, setFormData] = useState<Omit<ZakatData, "id">>({
@@ -73,6 +89,21 @@ const ZakatPage = () => {
     });
 
     const [zakatList, setZakatList] = useState<ZakatData[]>([]);
+
+    const fetchZakatData = async () => {
+        try {
+            const { data, error } = await supabase.from('zakat').select();
+            if (error) {
+                console.error('Error fetching data:', error.message);
+            } else if (data) {
+                const formattedData = mapFromSupabaseData(data as SupabaseZakatData[]);
+                setZakatList(formattedData);
+                console.log()
+            }
+        } catch (err) {
+            console.error('Unexpected error:', err);
+        }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -93,7 +124,7 @@ const ZakatPage = () => {
         } catch (err) {
             console.error('Unexpected error:', err);
         }
-    };    
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -123,7 +154,7 @@ const ZakatPage = () => {
             nilaiBerasMustahik: 0,
             totalMustahik: 0,
             keterangan: "",
-        });        
+        });
     };
 
     const handlePrint = () => {
@@ -148,13 +179,41 @@ const ZakatPage = () => {
         document.body.innerHTML = originalContents;
     };
 
+    // const handleEdit = (id: number) => {
+    //     const dataToEdit = zakatList.find((data) => data.id === id);
+    //     if (dataToEdit) {
+    //         setFormData(dataToEdit);
+    //         setZakatList(zakatList.filter((data) => data.id !== id));
+    //     }
+    // };
+
     const handleEdit = (id: number) => {
-        const dataToEdit = zakatList.find((data) => data.id === id);
-        if (dataToEdit) {
-            setFormData(dataToEdit);
-            setZakatList(zakatList.filter((data) => data.id !== id));
+        const index = zakatList.findIndex((data) => data.id === id);
+        if (index !== -1) {
+            const updatedList = [...zakatList];
+            updatedList[index] = {
+                ...updatedList[index],
+                ...formData,
+                id, // Retain the original ID
+            };
+            setZakatList(updatedList);
+            setFormData({
+                upz: "",
+                jumlahMuzaki: 0,
+                berasMuzaki: 0,
+                uangMuzaki: 0,
+                nilaiBerasMuzaki: 0,
+                totalMuzaki: 0,
+                jumlahMustahik: 0,
+                berasMustahik: 0,
+                uangMustahik: 0,
+                nilaiBerasMustahik: 0,
+                totalMustahik: 0,
+                keterangan: "",
+            });
         }
     };
+
 
     const handleUpload = (data: ZakatData[]) => {
         const dataupload = mapToSupabaseData(data)
@@ -162,7 +221,13 @@ const ZakatPage = () => {
         insertZakatList(dataupload);
     }
 
+    useEffect(() => {
+        fetchZakatData();
+    }, []);
+
     return (
+        
+
         <div className="flex flex-row space-x-12 text-gray-800 min-h-screen bg-secondary p-12 text-text rounded-3xl">
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -344,7 +409,7 @@ const ZakatPage = () => {
                         <button onClick={handlePrint} className={`bg-primary text-white py-2 px-6 rounded ${styles.button}`}>
                             Print Data
                         </button>
-                        <button onClick={() =>handleUpload(zakatList)} className={`bg-primary text-white py-2 px-6 rounded ${styles.button}`}>
+                        <button onClick={() => handleUpload(zakatList)} className={`bg-primary text-white py-2 px-6 rounded ${styles.button}`}>
                             Upload ke Database
                         </button>
                     </div>
