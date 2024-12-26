@@ -25,7 +25,7 @@ export default function NavbarAdmin({ user }: NavbarAdminProps) {
 
                 {/* Links */}
                 <div className="flex-grow flex space-x-12 justify-center">
-                    <Link href="/admininfaqsedekah" className="text-accent hover:underline">
+                    <Link href="/infaqsadaqah" className="text-accent hover:underline">
                         Infaq & Sadaqah
                     </Link>
                     <Link href="/adminzakat" className="text-accent hover:underline">
