@@ -39,7 +39,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-[50vh] flex flex-col items-center justify-center bg-primary px-4 py-8 mt-12 mx-32 rounded-xl">
+        <div className="min-h-[50vh] flex flex-col max-w-2xl items-center justify-center bg-primary px-20 py-8 mt-12 mx-32 rounded-xl">
             {/* Header */}
             <div className={inter.className + " flex flex-col items-center"}>
                 <h1 className="text-[32px] font-bold">Welcome Back</h1>
@@ -80,7 +80,7 @@ export default function LoginPage() {
                     >
                         {isLoggingIn ? "Logging in..." : "Log in"}
                     </button>
-                    <button
+                    {/* <button
                         type="button"
                         className={`bg-accent rounded-lg p-4 ${isSigningUp ? "opacity-50 cursor-not-allowed" : ""}`}
                         onClick={async (e) => {
@@ -90,7 +90,7 @@ export default function LoginPage() {
                         disabled={isSigningUp}
                     >
                         {isSigningUp ? "Signing up..." : "Sign up"}
-                    </button>
+                    </button> */}
                 </div>
             </form>
         </div>
