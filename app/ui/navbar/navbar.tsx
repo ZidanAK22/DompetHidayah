@@ -18,7 +18,7 @@ export default async function NavbarCustom() {
                 <span className="text-[#F8EDD9] font-extrabold"> Mesjid Nurul Hidayah </span>
             </div>
             <div className="flex-grow flex space-x-12 justify-center">
-                <Link href="/index" className="text-accent">
+                <Link href="/homepage" className="text-accent">
                     Home
                 </Link>
                 <Link href="/services" className="text-accent">
