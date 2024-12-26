@@ -25,9 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inknut.className} min-h-screen`}>
+      <body className={`${inknut.className} min-h-screen flex flex-col`}>
         <NavbarCustom />        
-          <main className="lg:px-24 flex items-center justify-center">
+          <main className="min-h-fit lg:px-24 flex flex-grow items-center justify-center">
             {children}
           </main>        
         <FooterCustom />
