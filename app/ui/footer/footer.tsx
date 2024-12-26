@@ -24,7 +24,7 @@ export default function FooterCustom() {
 
                 <Link isExternal href="https://instagram.com/mjnurulhidayah" className="flex mt-10">
                     <Image src="/Instagram_Glyph_White.png" width={24}/>
-                    <p className="ml-3">@mjnurulhidayah</p>
+                    <p className="ml-3 text-secondary">@mjnurulhidayah</p>
                 </Link>
 
                 <div className="flex mt-3">
