@@ -22,7 +22,7 @@ interface ZakatData {
 
 interface SupabaseZakatData {
     id_upz: string;
-    nama_upz: string; // Same as ZakatData
+    nama_upz: string;
     jumlah_muzaki: number;
     beras_muzaki: number;
     uang_muzaki: number;
@@ -33,13 +33,13 @@ interface SupabaseZakatData {
     uang_mustahik: number;
     nilai_beras_mustahik: number;
     total_mustahik: number;
-    keterangan: string; // Same as ZakatData
+    keterangan: string;
 }
 
 const mapToSupabaseData = (data: ZakatData[]): SupabaseZakatData[] => {
     return data.map(item => ({
-        id_upz: item.upz, // Map `id` to `id_upz`
-        nama_upz: item.upz, // Map `upz` to `nama_upz`
+        id_upz: item.upz, 
+        nama_upz: item.upz, 
         jumlah_muzaki: item.jumlahMuzaki,
         beras_muzaki: item.berasMuzaki,
         uang_muzaki: item.uangMuzaki,
@@ -56,8 +56,8 @@ const mapToSupabaseData = (data: ZakatData[]): SupabaseZakatData[] => {
 
 const mapFromSupabaseData = (data: SupabaseZakatData[]): ZakatData[] => {
     return data.map((item) => ({
-        id: parseInt(item.id_upz), // Map `id_upz` to `id`
-        upz: item.nama_upz,       // Map `nama_upz` to `upz`
+        id: parseInt(item.id_upz),
+        upz: item.nama_upz,
         jumlahMuzaki: item.jumlah_muzaki,
         berasMuzaki: item.beras_muzaki,
         uangMuzaki: item.uang_muzaki,
@@ -98,7 +98,6 @@ const ZakatPage = () => {
             } else if (data) {
                 const formattedData = mapFromSupabaseData(data as SupabaseZakatData[]);
                 setZakatList(formattedData);
-                console.log()
             }
         } catch (err) {
             console.error('Unexpected error:', err);
@@ -161,7 +160,6 @@ const ZakatPage = () => {
         const printContents = document.getElementById('zakat-table')?.outerHTML;
         const originalContents = document.body.innerHTML;
 
-        // Menambahkan logo dan header sebelum mencetak
         const printHeader = `
       <div class="print-header">
         <img src="/logomasjid.png" alt="Logo" style="width: 100px; height: auto; float: left; margin-right: 10px;" />
@@ -169,23 +167,14 @@ const ZakatPage = () => {
       </div>
     `;
 
-        // Menyusun konten halaman untuk print
         document.body.innerHTML = printHeader + printContents;
 
-        // Mencetak konten
         window.print();
 
-        // Mengembalikan halaman ke keadaan semula
-        document.body.innerHTML = originalContents;
+        setTimeout(() => {
+            document.body.innerHTML = originalContents;
+        }, 500); // Wait for print to finish
     };
-
-    // const handleEdit = (id: number) => {
-    //     const dataToEdit = zakatList.find((data) => data.id === id);
-    //     if (dataToEdit) {
-    //         setFormData(dataToEdit);
-    //         setZakatList(zakatList.filter((data) => data.id !== id));
-    //     }
-    // };
 
     const handleEdit = (id: number) => {
         const index = zakatList.findIndex((data) => data.id === id);
@@ -214,117 +203,136 @@ const ZakatPage = () => {
         }
     };
 
-
     const handleUpload = (data: ZakatData[]) => {
-        const dataupload = mapToSupabaseData(data)
-
+        const dataupload = mapToSupabaseData(data);
         insertZakatList(dataupload);
-    }
+    };
 
     useEffect(() => {
         fetchZakatData();
     }, []);
 
     return (
-        
-
-        <div className="flex flex-row space-x-12 text-gray-800 min-h-screen bg-secondary p-12 text-text rounded-3xl">
-
+        <div className="flex flex-col space-y-12 text-gray-800 min-h-screen bg-secondary p-12 text-text rounded-3xl">
             <form onSubmit={handleSubmit} className="space-y-4">
                 <h1 className="text-center text-3xl font-bold mb-6 text-black">Form Input Data Zakat</h1>
-                <div className="space-y-2">
-                    <label htmlFor="upz" className="font-semibold text-gray-700">UPZ Pengumpul:</label>
+                <div>
+                    <label htmlFor="upz" className="block text-lg">UPZ</label>
                     <input
-                        type="text"
                         id="upz"
                         name="upz"
+                        type="text"
                         value={formData.upz}
                         onChange={handleChange}
-                        className={`w-full p-2 border border-gray-300 rounded ${styles.inputText}`}
-                        required
+                        className="border-2 rounded p-2 w-full"
                     />
                 </div>
 
-                <h3 className="text-xl font-semibold mt-6 text-gray-800">Penerima</h3>
-                <div className="space-y-2">
-                    <label className="font-semibold text-gray-700">Jumlah Muzaki:</label>
+                <div>
+                    <label htmlFor="jumlahMuzaki" className="block text-lg">Jumlah Muzaki</label>
                     <input
-                        type="number"
+                        id="jumlahMuzaki"
                         name="jumlahMuzaki"
-                        value={formData.jumlahMuzaki || ""}
-                        onChange={handleChange}
-                        className={`w-full p-2 border border-gray-300 rounded ${styles.inputText}`}
-                    />
-                    <label className="font-semibold text-gray-700">Beras (kg.):</label>
-                    <input
                         type="number"
+                        value={formData.jumlahMuzaki}
+                        onChange={handleChange}
+                        className="border-2 rounded p-2 w-full"
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="berasMuzaki" className="block text-lg">Beras Muzaki (kg)</label>
+                    <input
+                        id="berasMuzaki"
                         name="berasMuzaki"
-                        value={formData.berasMuzaki || ""}
-                        onChange={handleChange}
-                        className={`w-full p-2 border border-gray-300 rounded ${styles.inputText}`}
-                    />
-                    <label className="font-semibold text-gray-700">Uang (Rp.):</label>
-                    <input
                         type="number"
+                        value={formData.berasMuzaki}
+                        onChange={handleChange}
+                        className="border-2 rounded p-2 w-full"
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="uangMuzaki" className="block text-lg">Uang Muzaki (Rp)</label>
+                    <input
+                        id="uangMuzaki"
                         name="uangMuzaki"
-                        value={formData.uangMuzaki || ""}
-                        onChange={handleChange}
-                        className={`w-full p-2 border border-gray-300 rounded ${styles.inputText}`}
-                    />
-                    <label className="font-semibold text-gray-700">Nilai Beras Diuangkan:</label>
-                    <input
                         type="number"
+                        value={formData.uangMuzaki}
+                        onChange={handleChange}
+                        className="border-2 rounded p-2 w-full"
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="nilaiBerasMuzaki" className="block text-lg">Nilai Beras Muzaki (Rp)</label>
+                    <input
+                        id="nilaiBerasMuzaki"
                         name="nilaiBerasMuzaki"
-                        value={formData.nilaiBerasMuzaki || ""}
+                        type="number"
+                        value={formData.nilaiBerasMuzaki}
                         onChange={handleChange}
-                        className={`w-full p-2 border border-gray-300 rounded ${styles.inputText}`}
+                        className="border-2 rounded p-2 w-full"
                     />
                 </div>
 
-                <h3 className="text-xl font-semibold mt-6 text-gray-800">Pendistribusian</h3>
-                <div className="space-y-2">
-                    <label className="font-semibold text-gray-700">Jumlah Mustahik:</label>
+                <div>
+                    <label htmlFor="jumlahMustahik" className="block text-lg">Jumlah Mustahik</label>
                     <input
-                        type="number"
+                        id="jumlahMustahik"
                         name="jumlahMustahik"
-                        value={formData.jumlahMustahik || ""}
-                        onChange={handleChange}
-                        className={`w-full p-2 border border-gray-300 rounded ${styles.inputText}`}
-                    />
-                    <label className="font-semibold text-gray-700">Beras (kg.):</label>
-                    <input
                         type="number"
-                        name="berasMustahik"
-                        value={formData.berasMustahik || ""}
+                        value={formData.jumlahMustahik}
                         onChange={handleChange}
-                        className={`w-full p-2 border border-gray-300 rounded ${styles.inputText}`}
-                    />
-                    <label className="font-semibold text-gray-700">Uang (Rp.):</label>
-                    <input
-                        type="number"
-                        name="uangMustahik"
-                        value={formData.uangMustahik || ""}
-                        onChange={handleChange}
-                        className={`w-full p-2 border border-gray-300 rounded ${styles.inputText}`}
-                    />
-                    <label className="font-semibold text-gray-700">Nilai Beras Diuangkan:</label>
-                    <input
-                        type="number"
-                        name="nilaiBerasMustahik"
-                        value={formData.nilaiBerasMustahik || ""}
-                        onChange={handleChange}
-                        className={`w-full p-2 border border-gray-300 rounded ${styles.inputText}`}
+                        className="border-2 rounded p-2 w-full"
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <label className="font-semibold text-gray-700">Keterangan (Infaq):</label>
+                <div>
+                    <label htmlFor="berasMustahik" className="block text-lg">Beras Mustahik (kg)</label>
+                    <input
+                        id="berasMustahik"
+                        name="berasMustahik"
+                        type="number"
+                        value={formData.berasMustahik}
+                        onChange={handleChange}
+                        className="border-2 rounded p-2 w-full"
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="uangMustahik" className="block text-lg">Uang Mustahik (Rp)</label>
+                    <input
+                        id="uangMustahik"
+                        name="uangMustahik"
+                        type="number"
+                        value={formData.uangMustahik}
+                        onChange={handleChange}
+                        className="border-2 rounded p-2 w-full"
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="nilaiBerasMustahik" className="block text-lg">Nilai Beras Mustahik (Rp)</label>
+                    <input
+                        id="nilaiBerasMustahik"
+                        name="nilaiBerasMustahik"
+                        type="number"
+                        value={formData.nilaiBerasMustahik}
+                        onChange={handleChange}
+                        className="border-2 rounded p-2 w-full"
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="keterangan" className="block text-lg">Keterangan</label>
                     <textarea
+                        id="keterangan"
                         name="keterangan"
                         value={formData.keterangan}
                         onChange={handleChange}
-                        className={`w-full p-2 border border-gray-300 rounded ${styles.textArea}`}
-                    ></textarea>
+                        className="border-2 rounded p-2 w-full"
+                    />
                 </div>
 
                 <button type="submit" className={`bg-primary text-white py-2 px-6 rounded ${styles.button}`}>
@@ -338,84 +346,47 @@ const ZakatPage = () => {
                     <table id="zakat-table" className="w-full mt-4 border-collapse print-table">
                         <thead>
                             <tr>
-                                <th className="border p-3 text-left" rowSpan={2}><center>No</center></th>
-                                <th className="border p-3 text-left" rowSpan={2}><center>UPZ Pengumpul</center></th>
-                                <th className="border p-3 text-left" colSpan={5}><center>Penerima</center></th>
-                                <th className="border p-3 text-left" colSpan={5}><center>Pendistribusian</center></th>
-                                <th className="border p-3 text-left" rowSpan={2}><center>Keterangan</center></th>
-                                <th className="border p-3 text-left" rowSpan={3}><center>Aksi</center></th>
+                                <th className="border px-4 py-2">UPZ</th>
+                                <th className="border px-4 py-2">Jumlah Muzaki</th>
+                                <th className="border px-4 py-2">Beras Muzaki</th>
+                                <th className="border px-4 py-2">Uang Muzaki</th>
+                                <th className="border px-4 py-2">Nilai Beras Muzaki</th>
+                                <th className="border px-4 py-2">Total Muzaki</th>
+                                <th className="border px-4 py-2">Jumlah Mustahik</th>
+                                <th className="border px-4 py-2">Beras Mustahik</th>
+                                <th className="border px-4 py-2">Uang Mustahik</th>
+                                <th className="border px-4 py-2">Nilai Beras Mustahik</th>
+                                <th className="border px-4 py-2">Total Mustahik</th>
+                                <th className="border px-4 py-2">Keterangan</th>
                             </tr>
-                            <tr>
-                                <th className="border p-3"><center>Jumlah Muzaki</center></th>
-                                <th className="border p-3"><center>Beras (kg.)</center></th>
-                                <th className="border p-3"><center>Uang (Rp.)</center></th>
-                                <th className="border p-3"><center>Nilai Beras Diuangkan</center></th>
-                                <th className="border p-3"><center>Jumlah 5&6</center></th>
-                                <th className="border p-3"><center>Jumlah Mustahik</center></th>
-                                <th className="border p-3"><center>Beras (kg.)</center></th>
-                                <th className="border p-3"><center>Uang (Rp.)</center></th>
-                                <th className="border p-3"><center>Nilai Beras Diuangkan</center></th>
-                                <th className="border p-3"><center>Jumlah 10&11</center></th>
-                            </tr>
-                            <tr>
-                                <th className="border p-3"><center>1</center></th>
-                                <th className="border p-3"><center>2</center></th>
-                                <th className="border p-3"><center>3</center></th>
-                                <th className="border p-3"><center>4</center></th>
-                                <th className="border p-3"><center>5</center></th>
-                                <th className="border p-3"><center>6</center></th>
-                                <th className="border p-3"><center>7</center></th>
-                                <th className="border p-3"><center>8</center></th>
-                                <th className="border p-3"><center>9</center></th>
-                                <th className="border p-3"><center>10</center></th>
-                                <th className="border p-3"><center>11</center></th>
-                                <th className="border p-3"><center>12</center></th>
-                                <th className="border p-3"><center>13</center></th>
-                            </tr>
-                            <tr>
-                                <th className="border p-.5" colSpan={14} style={{ backgroundColor: 'white' }}>
-                                    <center></center>
-                                </th>
-                            </tr>
-
                         </thead>
                         <tbody>
-                            {zakatList.map((zakat, index) => (
-                                <tr key={zakat.id}>
-                                    <td className="border p-3 text-center">{index + 1}</td>
-                                    <td className="border p-3">{zakat.upz}</td>
-                                    <td className="border p-3 text-center">{zakat.jumlahMuzaki}</td>
-                                    <td className="border p-3 text-center">{zakat.berasMuzaki}</td>
-                                    <td className="border p-3 text-center">{zakat.uangMuzaki}</td>
-                                    <td className="border p-3 text-center">{zakat.nilaiBerasMuzaki}</td>
-                                    <td className="border p-3 text-center">{zakat.totalMuzaki}</td>
-                                    <td className="border p-3 text-center">{zakat.jumlahMustahik}</td>
-                                    <td className="border p-3 text-center">{zakat.berasMustahik}</td>
-                                    <td className="border p-3 text-center">{zakat.uangMustahik}</td>
-                                    <td className="border p-3 text-center">{zakat.nilaiBerasMustahik}</td>
-                                    <td className="border p-3 text-center">{zakat.totalMustahik}</td>
-                                    <td className="border p-3">{zakat.keterangan}</td>
-                                    <td className="border p-3 text-center">
-                                        <button onClick={() => handleEdit(zakat.id)} className={`bg-primary text-white py-2 px-10 rounded ${styles.button}`}>
-                                            Edit
-                                        </button>
-                                    </td>
+                            {zakatList.map((item) => (
+                                <tr key={item.id}>
+                                    <td className="border px-4 py-2">{item.upz}</td>
+                                    <td className="border px-4 py-2">{item.jumlahMuzaki}</td>
+                                    <td className="border px-4 py-2">{item.berasMuzaki}</td>
+                                    <td className="border px-4 py-2">{item.uangMuzaki}</td>
+                                    <td className="border px-4 py-2">{item.nilaiBerasMuzaki}</td>
+                                    <td className="border px-4 py-2">{item.totalMuzaki}</td>
+                                    <td className="border px-4 py-2">{item.jumlahMustahik}</td>
+                                    <td className="border px-4 py-2">{item.berasMustahik}</td>
+                                    <td className="border px-4 py-2">{item.uangMustahik}</td>
+                                    <td className="border px-4 py-2">{item.nilaiBerasMustahik}</td>
+                                    <td className="border px-4 py-2">{item.totalMustahik}</td>
+                                    <td className="border px-4 py-2">{item.keterangan}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-
-                    <div className="print-button-container mt-4 space-x-8">
-                        <button onClick={handlePrint} className={`bg-primary text-white py-2 px-6 rounded ${styles.button}`}>
-                            Print Data
-                        </button>
-                        <button onClick={() => handleUpload(zakatList)} className={`bg-primary text-white py-2 px-6 rounded ${styles.button}`}>
-                            Upload ke Database
+                    <div className="text-center">
+                        <button onClick={handlePrint} className="bg-primary text-white py-2 px-6 mt-4 rounded">
+                            Print
                         </button>
                     </div>
                 </div>
             ) : (
-                <p className="mt-4 text-center">Belum ada data zakat yang dimasukkan.</p>
+                <p>Data belum tersedia.</p>
             )}
         </div>
     );
