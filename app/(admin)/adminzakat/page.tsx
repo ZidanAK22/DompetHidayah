@@ -72,7 +72,7 @@ const mapFromSupabaseData = (data: SupabaseZakatData[]): ZakatData[] => {
     }));
 };
 
-const ZakatPage = () => {
+const AdminZakatPage = () => {
     const [formData, setFormData] = useState<Omit<ZakatData, "id">>({
         upz: "",
         jumlahMuzaki: 0,

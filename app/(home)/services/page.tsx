@@ -1,6 +1,8 @@
+import Link from "next/link";
+
 export default function ServicesPage() {
     return (
-        <div className="flex flex-row justify-evenly bg-[#2A3B2F] p-10">
+        <div className="mt-8 flex flex-row justify-evenly bg-primary p-16 text-text rounded-3xl">
             <div className="bg-[#EDE5D8] w-1/4 rounded-lg shadow-lg p-6 text-center">
                 <img
                     src="/infaq.png"
@@ -11,9 +13,9 @@ export default function ServicesPage() {
                     Infaq adalah pemberian harta secara sukarela di jalan Allah, baik untuk
                     keperluan pribadi, sosial, maupun agama, tanpa batasan jumlah.
                 </p>
-                <button className="bg-[#F2C94C] text-white py-2 px-4 rounded">
+                <Link href={'/services/infaq'} className="bg-[#F2C94C] text-white py-2 px-4 rounded">
                     Infaq
-                </button>
+                </Link>
             </div>
             <div className="bg-[#EDE5D8] w-1/4 rounded-lg shadow-lg p-6 text-center">
                 <img
@@ -25,9 +27,9 @@ export default function ServicesPage() {
                     Zakat adalah kewajiban umat Islam untuk memberikan sebagian harta kepada
                     yang berhak sebagai penyucian harta dan kepedulian sosial.
                 </p>
-                <button className="bg-[#F2C94C] text-white py-2 px-4 rounded">
+                <Link href={'/services/zakat'} className="bg-[#F2C94C] text-white py-2 px-4 rounded">
                     Zakat
-                </button>
+                </Link>
             </div>
             <div className="bg-[#EDE5D8] w-1/4 rounded-lg shadow-lg p-6 text-center">
                 <img
@@ -39,9 +41,9 @@ export default function ServicesPage() {
                     Sedekah adalah pemberian sukarela dari seseorang kepada orang lain atau yang
                     membutuhkan, sebagai bentuk amal dan kepedulian.
                 </p>
-                <button className="bg-[#F2C94C] text-white py-2 px-4 rounded">
+                <Link href={'/services/sedekah'} className="bg-[#F2C94C] text-white py-2 px-4 rounded">
                     Sedekah
-                </button>
+                </Link>
             </div>
         </div>
     );
