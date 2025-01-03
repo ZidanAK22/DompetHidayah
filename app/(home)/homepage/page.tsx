@@ -1,32 +1,32 @@
 // Turn on if using framer motion
-// "use client";
+"use client";
 
 import { Image } from "@nextui-org/image";
 import { Link } from "@nextui-org/link";
 import { Limelight } from "next/font/google";
 import FooterCustom from "../../ui/footer/footer";
-// import { motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const lime = Limelight({
   subsets: ['latin'],
   weight: ['400'],
 })
 
-// const textContainerAnimation = {
-//   hidden: { opacity: 0, y: -50},
-//   visible: {
-//     opacity: 1,
-//     y: 0,
-//     transition: {
-//       staggerChildren: 9.3
-//     }
-//   }
-// }
+const textContainerAnimation = {
+  hidden: { opacity: 0, y: -50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      staggerChildren: 9.3
+    }
+  }
+}
 
-// const texteItemsAnimation = {
-//   hidden: { opacity: 0, y: 20},
-//   visible: { opacity: 1, y: 0}
-// }
+const texteItemsAnimation = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+}
 
 export default function Index() {
   return (
@@ -37,11 +37,11 @@ export default function Index() {
         <Image src="zakat.png" width={500} className="flex-1" />
         <div className="p-20 flex-1">
           <div className={lime.className}>
-            <h1 className="text-5xl mb-10">
+            <h1 className="text-5xl mb-10 text-accent">
               Dompet Hidayah
             </h1>
           </div>
-          <p>
+          <p className="text-secondary">
             Dompet Hidayah adalah
             sebuah platform yang
             memudahkan pengelolaan
@@ -57,16 +57,13 @@ export default function Index() {
             memberikan infaq dan sedekah
             ke berbagai program sosial
           </p>
-          <Link className="text-[#35910b] dark:text-[#ceef47] italic text-lg" href="/">
-            Detail
-          </Link>
         </div>
       </div>
 
       <h1 className="mt-20 mb-5 text-[#F4BC48] text-5xl">
         Berbagi untuk Sesama
       </h1>
-      <p>
+      <p className="text-secondary">
         Donasimu, Harapan Bagi Mereka.
         Jadilah Cahaya di Tengah Kegelapan
         dengan Memberikan Sedikit dari

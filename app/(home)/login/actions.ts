@@ -2,7 +2,6 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { useRouter } from 'next/navigation'
 
 import { createClient } from '../../utils/supabase/supabase_server'
 
@@ -20,11 +19,13 @@ export async function login(formData: FormData) {
 
     if (error) {
         console.log(error)
-        redirect('/error')
+        redirect(`/error?message=${encodeURIComponent(error.message)}`)
     }
+
 
     revalidatePath('/', "layout")
     redirect('/homepage')
+
 }
 
 export async function signup(formData: FormData) {

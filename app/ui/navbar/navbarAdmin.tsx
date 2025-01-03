@@ -16,20 +16,23 @@ export default function NavbarAdmin({ user }: NavbarAdminProps) {
     return (
         <>
             {/* Navbar */}
-            <nav className="sticky top-0 bg-primary flex flex-row items-center text-xl px-12 py-4 z-50 mb-12">
+            <nav className="sticky top-0 bg-primary flex flex-row justify-evenly items-center text-xl sm:text-sm px-12 py-4 z-50 mb-12">
                 {/* Logo */}
-                <Link className="flex items-center" href="/dashboardAdmin">
-                    <Image src="/logomasjid.png" width={128} />
+                <Link className="flex items-center" href="/">
+                    <Image src="/logomasjid.png" width={64} />
                     <span className="text-[#F8EDD9] font-extrabold ml-2">Mesjid Nurul Hidayah</span>
                 </Link>
 
                 {/* Links */}
-                <div className="flex-grow flex space-x-12 justify-center">
+                <div className="flex-grow flex space-x-12 sm:space-x-3 justify-center">
                     <Link href="/infaqsadaqah" className="text-accent hover:underline">
                         Infaq & Sadaqah
                     </Link>
                     <Link href="/adminzakat" className="text-accent hover:underline">
                         Zakat
+                    </Link>
+                    <Link href="/adminrefactor" className="text-accent hover:underline">
+                        Refactor
                     </Link>
                 </div>
 
