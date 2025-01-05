@@ -1,15 +1,28 @@
-import { ZakatDataSupabase, columns } from "./columns"
+import { redirect } from "next/navigation";
+import { columns } from "./columns"
 import { DataTable } from "./data-table"
 import { createClient } from "@/app/utils/supabase/supabase_server";
+import FormZakat from "./form";
 
 export default async function adminrefactor() {
-    const supabase = createClient();
-    const { data, error } = await (await supabase).from('zakat').select();
+    const supabase = await createClient();
+    const { data, error } = await supabase.from("zakat").select();
 
-    return (
-        <div className="bg-secondary text-text">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt hic modi numquam dolores voluptate ducimus labore impedit fugiat asperiores voluptates, ea accusamus vero, quas mollitia fugit alias iste sit similique!</p>
-            <DataTable columns={columns} data={data} />
-        </div>
+    if (error) {
+        redirect(`/error?message=${error}`)
+    }
+
+    if (!data || data.length === 0) {
+        const noDataMsg = 'No data found. Check back later.' as const;
+        redirect(`/error?message=${noDataMsg}`)
+    }
+
+    return (        
+            <div className="bg-secondary text-text">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt hic modi numquam dolores voluptate ducimus labore impedit fugiat asperiores voluptates, ea accusamus vero, quas mollitia fugit alias iste sit similique!</p>
+                <FormZakat />
+                <DataTable columns={columns} data={data} />
+            </div>
+        
     )
 }   

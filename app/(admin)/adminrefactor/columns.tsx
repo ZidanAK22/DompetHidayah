@@ -13,6 +13,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+import { useTableContext } from "@/context/tablecontext"
+
 export type ZakatDataSupabase = {
     id_upz: string;
     nama_upz: string;
@@ -28,6 +30,24 @@ export type ZakatDataSupabase = {
     total_mustahik: number;
     keterangan: string;
 }
+
+export const defaultZakatData: ZakatDataSupabase = {
+    id_upz: "",
+    nama_upz: "",
+    jumlah_muzaki: 0,
+    beras_muzaki: 0,
+    uang_muzaki: 0,
+    nilai_beras_muzaki: 0,
+    total_muzaki: 0,
+    jumlah_mustahik: 0,
+    beras_mustahik: 0,
+    uang_mustahik: 0,
+    nilai_beras_mustahik: 0,
+    total_mustahik: 0,
+    keterangan: "",
+};
+
+const { setSelectedRow } = useTableContext();
 
 export const columns: ColumnDef<ZakatDataSupabase>[] = [
     {
@@ -152,6 +172,11 @@ export const columns: ColumnDef<ZakatDataSupabase>[] = [
                             onClick={() => navigator.clipboard.writeText(zakat.id_upz)}
                         >
                             Copy Upz Id
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => setSelectedRow(zakat)}
+                        >
+                            Select Row
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
