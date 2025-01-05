@@ -1,24 +1,26 @@
 "use client";
 
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import { Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import { supabase } from "@/app/utils/supabase/supabase_client";
 
-interface Sadaqah {
+type Sadaqah = {
+  id?: number;
   nama_pengirim: string;
   ceklis_hide: boolean;
   jumlah: number;
   created_at: Date;
   jenis_transaksi: string;
-}
+};
 
-interface Infaq {
+type Infaq = {
+  id?: number;
   nama_pengirim: string;
   ceklis_hide: boolean;
   jumlah: number;
   created_at: Date;
   jenis_transaksi: string;
-}
+};
 
 export default function InputDataPage() {
   const [formData, setFormData] = useState({
@@ -31,6 +33,7 @@ export default function InputDataPage() {
 
   const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set(["infaq"]));
   const [dataList, setDataList] = useState<(Sadaqah | Infaq)[]>([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const selectedValue = React.useMemo(
     () => Array.from(selectedKeys).join(", ").replace(/_/g, " "),
@@ -47,7 +50,7 @@ export default function InputDataPage() {
         [name]: target.checked,
       });
     } else if (name === "jumlah") {
-      const formattedValue = value.replace(/\D/g, ""); // Only allow numbers
+      const formattedValue = value.replace(/\D/g, "");
       setFormData({
         ...formData,
         [name]: formattedValue,
@@ -64,6 +67,7 @@ export default function InputDataPage() {
     e.preventDefault();
 
     const newEntry = {
+      id: undefined,
       nama_pengirim: formData.nama_pengirim,
       ceklis_hide: formData.ceklis_hide,
       jumlah: Number(formData.jumlah),
@@ -72,6 +76,7 @@ export default function InputDataPage() {
     };
 
     setDataList([...dataList, newEntry]);
+
     setFormData({
       nama_pengirim: "",
       ceklis_hide: false,
@@ -87,36 +92,83 @@ export default function InputDataPage() {
       nama_pengirim: itemToEdit.nama_pengirim,
       ceklis_hide: itemToEdit.ceklis_hide,
       jumlah: itemToEdit.jumlah.toString(),
-      jenis_transaksi: "infaq", // Default to infaq for simplicity
+      jenis_transaksi: itemToEdit.jenis_transaksi,
       created_at: itemToEdit.created_at.toISOString(),
     });
 
-    // Remove the item from the list temporarily
     const updatedList = [...dataList];
     updatedList.splice(index, 1);
     setDataList(updatedList);
   };
 
   const handleDelete = (index: number) => {
+    const itemToDelete = dataList[index];
+
     const updatedList = [...dataList];
     updatedList.splice(index, 1);
     setDataList(updatedList);
+
+    deleteData(itemToDelete.id);
   };
 
-  const handleUpload = (data: Sadaqah[]) => {
-    insertDataList(data);
-  }
-
-  const insertDataList = async (data: Sadaqah[]): Promise<void> => {
+  const handleUpload = async () => {
     try {
-      const { error } = await supabase.from('sadaqahinfaq').insert(data);
+      for (const data of dataList) {
+        if (data.id) {
+          await updateData(data.id, data);
+        }
+      }
+      console.log("Data updated successfully");
+    } catch (error) {
+      console.error("Error uploading data:", error);
+    }
+  };
+
+  const handleLoadData = async () => {
+    await loadData();
+  };
+
+  const updateData = async (id: number, data: Sadaqah | Infaq): Promise<void> => {
+    try {
+      const { error } = await supabase
+        .from("sadaqahinfaq")
+        .update(data)
+        .eq("id", id);
+
       if (error) {
-        console.error('Error inserting data:', error.message);
+        console.error("Error updating data:", error.message);
       } else {
-        console.log('Data inserted successfully');
+        console.log("Data updated successfully");
       }
     } catch (err) {
-      console.error('Unexpected error:', err);
+      console.error("Unexpected error:", err);
+    }
+  };
+
+  const deleteData = async (id: number): Promise<void> => {
+    try {
+      const { error } = await supabase.from("sadaqahinfaq").delete().eq("id", id);
+      if (error) {
+        console.error("Error deleting data:", error.message);
+      } else {
+        console.log("Data deleted successfully");
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+    }
+  };
+
+  const loadData = async () => {
+    try {
+      const { data, error } = await supabase.from("sadaqahinfaq").select();
+      if (error) {
+        console.error("Error loading data:", error.message);
+      } else {
+        setDataList(data || []);
+        setIsDataLoaded(true);
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
     }
   };
 
@@ -127,16 +179,13 @@ export default function InputDataPage() {
 
   return (
     <div className="min-h-[50vh] flex flex-col items-center justify-center bg-primary px-4 py-8 mt-12 mx-32 rounded-xl">
-      {/* Header */}
       <div className="flex flex-col items-center">
         <h1 className="text-[32px] font-bold">Input Data</h1>
         <span className="opacity-50">Masukkan Data Infaq atau Sadaqah</span>
       </div>
 
-      {/* Input Form */}
       <div className="min-w-full bg-secondary flex justify-center items-center rounded-xl mt-8 text-[#000000] px-6 py-12">
         <form className="flex flex-col gap-6 max-w-xl w-full" onSubmit={handleSubmit}>
-          {/* Input Nama Pengirim */}
           <div className="flex flex-col gap-2 text-left">
             <label className="text-sm font-medium">Nama Pengirim</label>
             <Input
@@ -149,7 +198,6 @@ export default function InputDataPage() {
             />
           </div>
 
-          {/* Input Jumlah */}
           <div className="flex flex-col gap-2 text-left">
             <label className="text-sm font-medium">Jumlah</label>
             <Input
@@ -160,11 +208,9 @@ export default function InputDataPage() {
               value={formData.jumlah}
               onChange={handleChange}
             />
-            {/* Display formatted currency */}
             <div className="text-xs text-gray-500 mt-2">{formattedJumlah}</div>
           </div>
 
-          {/* Dropdown for Jenis Transaksi */}
           <div className="flex flex-col gap-2 text-left">
             <label className="text-sm font-medium">Jenis Transaksi</label>
             <Dropdown>
@@ -194,7 +240,6 @@ export default function InputDataPage() {
             </Dropdown>
           </div>
 
-          {/* Checkbox Ceklis Hide */}
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -204,59 +249,59 @@ export default function InputDataPage() {
             />
             <label className="text-sm font-medium">Ceklis Hide</label>
           </div>
-          <Button type="submit" className="bg-accent rounded-md px-4 py-2 justify-center">
-            Submit
-          </Button>
+
+          <div className="flex justify-between gap-4">
+            <Button 
+              type="submit" 
+              className="bg-accent rounded-md px-4 py-2">
+              Submit
+            </Button>
+            <Button 
+              type="button" 
+              onClick={handleLoadData} 
+              className="bg-accent rounded-md px-4 py-2">
+              Load Data
+            </Button>
+            <Button 
+              type="button" 
+              onClick={handleUpload} 
+              className="bg-accent rounded-md px-4 py-2">
+              Upload
+            </Button>
+          </div>
         </form>
       </div>
 
-      {/* Table */}
-      <div className="mt-8 w-full">
-        <h2 className="text-xl font-bold mb-4">Data Infaq dan Sadaqah</h2>
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
-            <tr>
-              <th className="border p-2">No</th>
-              <th className="border p-2">Nama Pengirim</th>
-              <th className="border p-2">Jumlah</th>
-              <th className="border p-2">Jenis Transaksi</th>
-              <th className="border p-2">Tanggal</th>
-              <th className="border p-2">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataList.map((data, index) => (
-              <tr key={index}>
-                <td className="border p-2 text-center">{index + 1}</td>
-                <td className="border p-2">{data.nama_pengirim}</td>
-                <td className="border p-2">{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(data.jumlah)}</td>
-                <td className="border p-2">{data.jenis_transaksi}</td>
-                <td className="border p-2">{new Date(data.created_at).toLocaleDateString()}</td>
-                <td className="border p-2 text-center">
-                  <button
-                    className="bg-blue-500 text-white px-4 py-1 rounded mr-2"
-                    onClick={() => handleEdit(index)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="bg-red-500 text-white px-4 py-1 rounded"
-                    onClick={() => handleDelete(index)}
-                  >
-                    Delete
-                  </button>
-                </td>
+      {dataList.length > 0 && (
+        <div className="min-w-full bg-secondary mt-8 rounded-xl p-6">
+          <h2 className="text-[24px] font-bold mb-4">Data List</h2>
+          <table className="w-full text-left">
+            <thead>
+              <tr>
+                <th className="px-4 py-2">No</th>
+                <th className="px-4 py-2">Nama Pengirim</th>
+                <th className="px-4 py-2">Jumlah</th>
+                <th className="px-4 py-2">Jenis Transaksi</th>
+                <th className="px-4 py-2">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <button
-          className="bg-red-500 text-white px-4 py-1 rounded button bg-accent text-text justify-center m-4 p-8"
-          onClick={() => handleUpload(dataList)}
-        >
-          Upload
-        </button>
-      </div>
+            </thead>
+            <tbody>
+              {dataList.map((item, index) => (
+                <tr key={item.id}>
+                  <td className="px-4 py-2">{index + 1}</td>
+                  <td className="px-4 py-2">{item.nama_pengirim}</td>
+                  <td className="px-4 py-2">{item.jumlah}</td>
+                  <td className="px-4 py-2">{item.jenis_transaksi}</td>
+                  <td className="px-4 py-2">
+                    <Button onClick={() => handleEdit(index)} color="primary" size="sm">Edit</Button>
+                    <Button onClick={() => handleDelete(index)} color="danger" size="sm" className="ml-2">Delete</Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
