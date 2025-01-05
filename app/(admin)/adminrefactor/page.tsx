@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { columns } from "./columns"
 import { DataTable } from "./data-table"
 import { createClient } from "@/app/utils/supabase/supabase_server";
-import FormZakat from "./form";
+import FormZakat from "@/app/ui/form/formZakat";
 
 export default async function adminrefactor() {
     const supabase = await createClient();

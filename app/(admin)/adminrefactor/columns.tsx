@@ -47,8 +47,6 @@ export const defaultZakatData: ZakatDataSupabase = {
     keterangan: "",
 };
 
-const { setSelectedRow } = useTableContext();
-
 export const columns: ColumnDef<ZakatDataSupabase>[] = [
     {
         accessorKey: "nama_upz",
@@ -157,6 +155,7 @@ export const columns: ColumnDef<ZakatDataSupabase>[] = [
         id: "actions",
         cell: ({ row }) => {
             const zakat = row.original
+            const { setSelectedRow } = useTableContext();
 
             return (
                 <DropdownMenu>
