@@ -91,6 +91,8 @@ const AdminZakatPage = () => {
 
     const [zakatList, setZakatList] = useState<ZakatData[]>([]);
     const [upzList, setUpzList] = useState<string[]>([]);
+    const [selectedUpzId, setSelectedUpzId] = useState<string>("");
+
 
 
     const fetchUpz = async () => {
@@ -198,40 +200,109 @@ const AdminZakatPage = () => {
         document.body.innerHTML = originalContents;
     };
 
+    const handleEdit = (id: number) => {
+        const dataToEdit = zakatList.find((data) => data.id === id);
+        if (dataToEdit) {
+            setFormData(dataToEdit);
+            setZakatList(zakatList.filter((data) => data.id !== id));
+        }
+    };
+
+    // const handleEdit = (id: number) => {
+    //     const index = zakatList.findIndex((data) => data.id === id);
+    //     if (index !== -1) {
+    //         const updatedList = [...zakatList];
+    //         updatedList[index] = {
+    //             ...updatedList[index],
+    //             ...formData,
+    //             id, // Retain the original ID
+    //         };
+    //         setZakatList(updatedList);
+    //         setFormData({
+    //             upz: "",
+    //             jumlahMuzaki: 0,
+    //             berasMuzaki: 0,
+    //             uangMuzaki: 0,
+    //             nilaiBerasMuzaki: 0,
+    //             totalMuzaki: 0,
+    //             jumlahMustahik: 0,
+    //             berasMustahik: 0,
+    //             uangMustahik: 0,
+    //             nilaiBerasMustahik: 0,
+    //             totalMustahik: 0,
+    //             keterangan: "",
+    //         });
+    //     }
+    // };
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
     // const handleEdit = (id: number) => {
     //     const dataToEdit = zakatList.find((data) => data.id === id);
     //     if (dataToEdit) {
-    //         setFormData(dataToEdit);
-    //         setZakatList(zakatList.filter((data) => data.id !== id));
+    //         setSelectedId(id); // Store the selected ID for highlighting
+    //         setFormData({
+    //             upz: dataToEdit.upz,
+    //             jumlahMuzaki: dataToEdit.jumlahMuzaki,
+    //             berasMuzaki: dataToEdit.berasMuzaki,
+    //             uangMuzaki: dataToEdit.uangMuzaki,
+    //             nilaiBerasMuzaki: dataToEdit.nilaiBerasMuzaki,
+    //             totalMuzaki: dataToEdit.totalMuzaki,
+    //             jumlahMustahik: dataToEdit.jumlahMustahik,
+    //             berasMustahik: dataToEdit.berasMustahik,
+    //             uangMustahik: dataToEdit.uangMustahik,
+    //             nilaiBerasMustahik: dataToEdit.nilaiBerasMustahik,
+    //             totalMustahik: dataToEdit.totalMustahik,
+    //             keterangan: dataToEdit.keterangan,
+    //         });
     //     }
     // };
 
-    const handleEdit = (id: number) => {
-        const index = zakatList.findIndex((data) => data.id === id);
-        if (index !== -1) {
-            const updatedList = [...zakatList];
-            updatedList[index] = {
-                ...updatedList[index],
-                ...formData,
-                id, // Retain the original ID
-            };
-            setZakatList(updatedList);
-            setFormData({
-                upz: "",
-                jumlahMuzaki: 0,
-                berasMuzaki: 0,
-                uangMuzaki: 0,
-                nilaiBerasMuzaki: 0,
-                totalMuzaki: 0,
-                jumlahMustahik: 0,
-                berasMustahik: 0,
-                uangMustahik: 0,
-                nilaiBerasMustahik: 0,
-                totalMustahik: 0,
-                keterangan: "",
-            });
+    const handleUpdate = async () => {
+        if (!selectedId) return;
+
+        const totalMuzaki = formData.berasMuzaki + formData.uangMuzaki + formData.nilaiBerasMuzaki;
+        const totalMustahik = formData.berasMustahik + formData.uangMustahik + formData.nilaiBerasMustahik;
+
+        const updatedData: ZakatData = {
+            ...formData,
+            id: selectedId, // Include the id here
+            totalMuzaki,
+            totalMustahik,
+        };
+
+        try {
+            const { error } = await supabase
+                .from('zakat')
+                .update(mapToSupabaseData([updatedData])[0])
+                .eq('id_upz', updatedData.upz);
+
+            if (error) {
+                console.error('Error updating data:', error.message);
+            } else {
+                await fetchZakatData();
+                setSelectedId(null);
+                setFormData({
+                    upz: "",
+                    jumlahMuzaki: 0,
+                    berasMuzaki: 0,
+                    uangMuzaki: 0,
+                    nilaiBerasMuzaki: 0,
+                    totalMuzaki: 0,
+                    jumlahMustahik: 0,
+                    berasMustahik: 0,
+                    uangMustahik: 0,
+                    nilaiBerasMustahik: 0,
+                    totalMustahik: 0,
+                    keterangan: "",
+                });
+            }
+        } catch (err) {
+            console.error('Unexpected error:', err);
         }
     };
+
+
+
 
 
     const handleUpload = (data: ZakatData[]) => {
@@ -255,7 +326,7 @@ const AdminZakatPage = () => {
     return (
 
 
-        <div className="flex flex-row space-x-12 text-gray-800 min-h-screen bg-secondary p-12 text-text rounded-3xl mb-4">
+        <div className="flex sm:flex-col md:flex-col flex-col space-x-12 text-gray-800 min-h-screen bg-secondary p-12 text-text rounded-3xl mb-4">
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <h1 className="text-center text-3xl font-bold mb-6 text-black">Form Input Data Zakat</h1>
@@ -365,80 +436,89 @@ const AdminZakatPage = () => {
                 </button>
             </form>
 
-            <hr />
-
             {zakatList.length > 0 ? (
-                <div className="table-container p-8">
+                <div className="table-container">
                     <h2 className="text-2xl font-semibold mt-8 text-center">Tabel Data Zakat</h2>
-                    <table id="zakat-table" className="w-full mt-4 border-collapse print-table">
-                        <thead>
-                            <tr>
-                                <th className="border p-3 text-left" rowSpan={2}><center>No</center></th>
-                                <th className="border p-3 text-left" rowSpan={2}><center>UPZ Pengumpul</center></th>
-                                <th className="border p-3 text-left" colSpan={5}><center>Penerima</center></th>
-                                <th className="border p-3 text-left" colSpan={5}><center>Pendistribusian</center></th>
-                                <th className="border p-3 text-left" rowSpan={2}><center>Keterangan</center></th>
-                                <th className="border p-3 text-left" rowSpan={3}><center>Aksi</center></th>
-                            </tr>
-                            <tr>
-                                <th className="border p-3"><center>Jumlah Muzaki</center></th>
-                                <th className="border p-3"><center>Beras (kg.)</center></th>
-                                <th className="border p-3"><center>Uang (Rp.)</center></th>
-                                <th className="border p-3"><center>Nilai Beras Diuangkan</center></th>
-                                <th className="border p-3"><center>Jumlah 5&6</center></th>
-                                <th className="border p-3"><center>Jumlah Mustahik</center></th>
-                                <th className="border p-3"><center>Beras (kg.)</center></th>
-                                <th className="border p-3"><center>Uang (Rp.)</center></th>
-                                <th className="border p-3"><center>Nilai Beras Diuangkan</center></th>
-                                <th className="border p-3"><center>Jumlah 10&11</center></th>
-                            </tr>
-                            <tr>
-                                <th className="border p-3"><center>1</center></th>
-                                <th className="border p-3"><center>2</center></th>
-                                <th className="border p-3"><center>3</center></th>
-                                <th className="border p-3"><center>4</center></th>
-                                <th className="border p-3"><center>5</center></th>
-                                <th className="border p-3"><center>6</center></th>
-                                <th className="border p-3"><center>7</center></th>
-                                <th className="border p-3"><center>8</center></th>
-                                <th className="border p-3"><center>9</center></th>
-                                <th className="border p-3"><center>10</center></th>
-                                <th className="border p-3"><center>11</center></th>
-                                <th className="border p-3"><center>12</center></th>
-                                <th className="border p-3"><center>13</center></th>
-                            </tr>
-                            <tr>
-                                <th className="border p-.5" colSpan={14} style={{ backgroundColor: 'white' }}>
-                                    <center></center>
-                                </th>
-                            </tr>
-
-                        </thead>
-                        <tbody>
-                            {zakatList.map((zakat, index) => (
-                                <tr key={zakat.id}>
-                                    <td className="border p-3 text-center">{index + 1}</td>
-                                    <td className="border p-3">{zakat.upz}</td>
-                                    <td className="border p-3 text-center">{zakat.jumlahMuzaki}</td>
-                                    <td className="border p-3 text-center">{zakat.berasMuzaki}</td>
-                                    <td className="border p-3 text-center">{zakat.uangMuzaki}</td>
-                                    <td className="border p-3 text-center">{zakat.nilaiBerasMuzaki}</td>
-                                    <td className="border p-3 text-center">{zakat.totalMuzaki}</td>
-                                    <td className="border p-3 text-center">{zakat.jumlahMustahik}</td>
-                                    <td className="border p-3 text-center">{zakat.berasMustahik}</td>
-                                    <td className="border p-3 text-center">{zakat.uangMustahik}</td>
-                                    <td className="border p-3 text-center">{zakat.nilaiBerasMustahik}</td>
-                                    <td className="border p-3 text-center">{zakat.totalMustahik}</td>
-                                    <td className="border p-3">{zakat.keterangan}</td>
-                                    <td className="border p-3 text-center">
-                                        <button onClick={() => handleEdit(zakat.id)} className={`bg-primary text-white py-2 px-10 rounded ${styles.button}`}>
-                                            Edit
-                                        </button>
-                                    </td>
+                    {/* Table Container for Scroll on Overflow */}
+                    <div className="overflow-x-auto">
+                        <table id="zakat-table" className="w-full mt-4 border-collapse print-table text-md sm:text-sm">
+                            <thead>
+                                <tr>
+                                    <th className="border p-3 text-left" rowSpan={2}><center>No</center></th>
+                                    <th className="border p-3 text-left" rowSpan={2}><center>UPZ Pengumpul</center></th>
+                                    <th className="border p-3 text-left" colSpan={5}><center>Penerima</center></th>
+                                    <th className="border p-3 text-left" colSpan={5}><center>Pendistribusian</center></th>
+                                    <th className="border p-3 text-left" rowSpan={2}><center>Keterangan</center></th>
+                                    <th className="border p-3 text-left" rowSpan={3}><center>Aksi</center></th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                <tr>
+                                    <th className="border p-3"><center>Jumlah Muzaki</center></th>
+                                    <th className="border p-3"><center>Beras (kg.)</center></th>
+                                    <th className="border p-3"><center>Uang (Rp.)</center></th>
+                                    <th className="border p-3"><center>Nilai Beras Diuangkan</center></th>
+                                    <th className="border p-3"><center>Jumlah 5&6</center></th>
+                                    <th className="border p-3"><center>Jumlah Mustahik</center></th>
+                                    <th className="border p-3"><center>Beras (kg.)</center></th>
+                                    <th className="border p-3"><center>Uang (Rp.)</center></th>
+                                    <th className="border p-3"><center>Nilai Beras Diuangkan</center></th>
+                                    <th className="border p-3"><center>Jumlah 10&11</center></th>
+                                </tr>
+                                <tr>
+                                    <th className="border p-3"><center>1</center></th>
+                                    <th className="border p-3"><center>2</center></th>
+                                    <th className="border p-3"><center>3</center></th>
+                                    <th className="border p-3"><center>4</center></th>
+                                    <th className="border p-3"><center>5</center></th>
+                                    <th className="border p-3"><center>6</center></th>
+                                    <th className="border p-3"><center>7</center></th>
+                                    <th className="border p-3"><center>8</center></th>
+                                    <th className="border p-3"><center>9</center></th>
+                                    <th className="border p-3"><center>10</center></th>
+                                    <th className="border p-3"><center>11</center></th>
+                                    <th className="border p-3"><center>12</center></th>
+                                    <th className="border p-3"><center>13</center></th>
+                                </tr>
+                                <tr>
+                                    <th className="border p-.5" colSpan={14} style={{ backgroundColor: 'white' }}>
+                                        <center></center>
+                                    </th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                {zakatList.map((zakat, index) => (
+                                    <tr key={zakat.id}>
+                                        <td className="border p-3 text-center">{index + 1}</td>
+                                        <td className="border p-3">{zakat.upz}</td>
+                                        <td className="border p-3 text-center">{zakat.jumlahMuzaki}</td>
+                                        <td className="border p-3 text-center">{zakat.berasMuzaki}</td>
+                                        <td className="border p-3 text-center">{zakat.uangMuzaki}</td>
+                                        <td className="border p-3 text-center">{zakat.nilaiBerasMuzaki}</td>
+                                        <td className="border p-3 text-center">{zakat.totalMuzaki}</td>
+                                        <td className="border p-3 text-center">{zakat.jumlahMustahik}</td>
+                                        <td className="border p-3 text-center">{zakat.berasMustahik}</td>
+                                        <td className="border p-3 text-center">{zakat.uangMustahik}</td>
+                                        <td className="border p-3 text-center">{zakat.nilaiBerasMustahik}</td>
+                                        <td className="border p-3 text-center">{zakat.totalMustahik}</td>
+                                        <td className="border p-3">{zakat.keterangan}</td>
+                                        <td className="border p-3 text-center">
+                                            <button onClick={() => handleEdit(zakat.id)} className={`bg-primary text-white py-2 px-10 rounded ${styles.button}`}>
+                                                Edit
+                                            </button>
+                                            {selectedUpzId === zakat.upz && (
+                                                <button
+                                                    onClick={handleUpdate}
+                                                    className={`bg-green-600 text-white py-2 px-4 rounded ${styles.button}`}
+                                                >
+                                                    Update
+                                                </button>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div className="print-button-container mt-4 space-x-8">
                         <button onClick={handlePrint} className={`bg-primary text-white py-2 px-6 rounded ${styles.button}`}>

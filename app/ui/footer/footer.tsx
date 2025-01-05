@@ -8,13 +8,13 @@ const lilita = Lilita_One( {
 
 export default function FooterCustom() {
     return (
-        <div className="bottom-0 bg-primary w-full flex flex-row p-10 justify-between mt-12">                        
+        <div className="bottom-0 bg-primary w-full flex flex-row p-10 justify-between mt-12 text-secondary">                        
             
             {/* Contact Information */}
             <div>
-                <div className="text-[text]">
+                <div>
                     <div className={lilita.className}>
-                        <p className="text-2xl">Dompet Hidayah</p>
+                        <p className="text-2xl text-accent">Dompet Hidayah</p>
                     </div>                    
                     <p className="mt-3">
                         Jl. Babakan Sari 1, Babakan Sari, 

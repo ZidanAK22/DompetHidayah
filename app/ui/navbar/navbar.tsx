@@ -1,9 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link, Image, Button } from "@nextui-org/react";
+import { Link, Image } from "@nextui-org/react";
 import { createClient } from "@/app/utils/supabase/supabase_server";
-import { User } from "@supabase/supabase-js";
-import { BarLoader } from "react-spinners";
-import { redirect } from "next/navigation";
 
 export default async function NavbarCustom() {
     const supabase = await createClient();
@@ -12,12 +8,12 @@ export default async function NavbarCustom() {
 
 
     return (
-        <nav className="sticky top-0 bg-primary flex flex-row items-center text-xl px-12 py-4 z-50">
+        <nav className="sticky top-0 bg-primary flex flex-row items-center text-xl justify-center sm:justify-between sm:px-2 px-12 py-4 z-50">
             <div className="flex items-center">
-                <Image src="/logomasjid.png" width={128} />
+                <Image src="/logomasjid.png" width={96} />
                 <span className="text-[#F8EDD9] font-extrabold"> Mesjid Nurul Hidayah </span>
             </div>
-            <div className="flex-grow flex space-x-12 justify-center">
+            <div className="flex-grow flex sm:space-x-2 space-x-12 justify-center">
                 <Link href="/homepage" className="text-accent">
                     Home
                 </Link>
@@ -26,19 +22,20 @@ export default async function NavbarCustom() {
                 </Link>
                 <Link href="/about" className="text-accent">
                     About Us
-                </Link>                
+                </Link>
             </div>
-            <div className="flex justify-center space-x-2">
+            <div className="flex justify-center space-x-2 text-accent">
                 {user ? (
-                    <>                        
-                        <p>Welcome {user.email}</p>
-                        <div>
-                            <form action="/auth/signout" method="post">
-                                <button className="button block" type="submit">
-                                    Sign out
-                                </button>
-                            </form>
-                        </div>
+                    <>
+                        <p>{user.email}</p>
+                        <Link href="/dashboardAdmin" className="text-accent">
+                            <span>Dashboard Admin</span>
+                        </Link>
+                        <form action="/auth/signout" method="post">
+                            <button className="button block" type="submit">
+                                Sign out
+                            </button>
+                        </form>
                     </>
                 ) : (
                     <>
@@ -47,11 +44,11 @@ export default async function NavbarCustom() {
                         </Link>
                         <Link href="/signup" className="text-accent">
                             Sign Up
-                        </Link>                        
-                        
+                        </Link>
+
                     </>
                 )}
             </div>
-        </nav>
+        </nav >
     );
 }
