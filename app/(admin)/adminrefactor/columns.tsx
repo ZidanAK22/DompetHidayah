@@ -4,14 +4,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { ActionZakat } from "./zakatAction"
 
 export type ZakatDataSupabase = {
     id_upz: string;
@@ -26,8 +19,24 @@ export type ZakatDataSupabase = {
     uang_mustahik: number;
     nilai_beras_mustahik: number;
     total_mustahik: number;
-    keterangan: string;
+    keterangan?: string;
 }
+
+export const defaultZakatData: ZakatDataSupabase = {
+    id_upz: "",
+    nama_upz: "",
+    jumlah_muzaki: 0,
+    beras_muzaki: 0,
+    uang_muzaki: 0,
+    nilai_beras_muzaki: 0,
+    total_muzaki: 0,
+    jumlah_mustahik: 0,
+    beras_mustahik: 0,
+    uang_mustahik: 0,
+    nilai_beras_mustahik: 0,
+    total_mustahik: 0,
+    keterangan: "",
+};
 
 export const columns: ColumnDef<ZakatDataSupabase>[] = [
     {
@@ -136,26 +145,7 @@ export const columns: ColumnDef<ZakatDataSupabase>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            const zakat = row.original
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open Menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(zakat.id_upz)}
-                        >
-                            Copy Upz Id
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
+            <ActionZakat row={row}/>
         }
     },
 ]

@@ -4,7 +4,7 @@ import React, { useState, ChangeEvent, useEffect } from "react";
 import { Input, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import { supabase } from "@/app/utils/supabase/supabase_client";
 
-type Sadaqah = {
+export type Sadaqah = {
   id?: number;
   nama_pengirim: string;
   ceklis_hide: boolean;

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Inknut_Antiqua } from "next/font/google";
 import "../globals.css"
-import { Suspense } from "react";
 import NavbarAdmin from "../ui/navbar/navbarAdmin";
 import { createClient } from "../utils/supabase/supabase_server";
 import { redirect } from "next/navigation";
-import { User } from "@supabase/supabase-js";
+import { TableProvider } from "@/context/tablecontext";
 
 const inter = Inter({ subsets: ["latin"] });
 const inknut = Inknut_Antiqua({
@@ -26,17 +25,15 @@ export default async function RootLayout({
     children: React.ReactNode;
 }>) {
 
-    const supabase = createClient();
+    const supabase = await createClient();
 
     let admin = null;
 
     try {
-        const {
-            data: { user }
-        } = await (await supabase).auth.getUser();
+        const { data: { user } } = await supabase.auth.getUser();
 
         admin = user;
-        
+
     } catch (error) {
         console.error("Error fetching user data:", error);
         redirect("/error");
@@ -47,7 +44,9 @@ export default async function RootLayout({
             <body className={`${inknut.className} min-h-screen`}>
                 <NavbarAdmin user={admin} />
                 <main className="lg:px-24">
-                    {children}
+                    <TableProvider userInput={admin}>
+                        {children}
+                    </TableProvider>
                 </main>
             </body>
         </html>
