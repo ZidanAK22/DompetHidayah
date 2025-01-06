@@ -3,6 +3,7 @@ import { columns } from "./columns"
 import { DataTable } from "./data-table"
 import { createClient } from "@/app/utils/supabase/supabase_server";
 import FormZakat from "@/app/ui/form/formZakat";
+import PrintWrapper from "./printwrapper";
 
 export default async function adminrefactor() {
     const supabase = await createClient();
@@ -17,13 +18,15 @@ export default async function adminrefactor() {
     //     redirect(`/error?message=${noDataMsg}`)
     // }
 
-    return (        
-            <div className="rounded-xl bg-secondary text-text p-12">                
-                <FormZakat />
-                <div className="bg-primary">
+    return (
+        <div className="rounded-xl bg-secondary text-text p-12">
+            <FormZakat />
+
+            <PrintWrapper title="Data Zakat">
                 <DataTable columns={columns} data={data} />
-                </div>
-            </div>
-        
+            </PrintWrapper>
+
+        </div>
+
     )
 }
