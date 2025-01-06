@@ -28,7 +28,7 @@ export type ZakatDataSupabase = {
     uang_mustahik: number;
     nilai_beras_mustahik: number;
     total_mustahik: number;
-    keterangan: string;
+    keterangan?: string;
 }
 
 export const defaultZakatData: ZakatDataSupabase = {

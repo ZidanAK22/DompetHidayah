@@ -4,7 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTableContext } from "@/context/tablecontext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/app/utils/supabase/supabase_client";
 
 const schema = z.object({
     id_upz: z.string().nonempty(),
@@ -24,26 +25,83 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
+type UpzItem = {
+    id_upz: string;
+    nama_upz: string;
+};
+
 export default function FormZakat() {
     const { selectedRow } = useTableContext();
-
-    const { register, handleSubmit, reset } = useForm<FormData>({
+    const { register, handleSubmit, reset, setValue } = useForm<FormData>({
         resolver: zodResolver(schema),
         defaultValues: selectedRow || {}, // Default to selected row or empty
     });
 
-    const onSubmit = (data: FormData) => {
+    const [upzList, setUpzList] = useState<UpzItem[]>([]);
+    const [upzName, setUpzName] = useState('');
+
+    useEffect(() => {
+        // Fetch the UPZ list from an API or other data source
+        const fetchUpzList = async () => {
+            const { data, error } = await supabase.from("upz_pengumpulan").select("id_upz, nama_upz");
+            console.log(error?.message);
+
+            if (data) {
+                // Set the UPZ list state
+                setUpzList(data.map((item: { id_upz: string, nama_upz: string }) => ({
+                    id_upz: item.id_upz,
+                    nama_upz: item.nama_upz
+                })));
+            }
+        };
+
+        fetchUpzList();
+
+        // Reset form if selectedRow exists
+        if (selectedRow) {
+            reset(selectedRow);
+        }
+    }, [selectedRow, reset]);  // Depend on selectedRow and reset to trigger updates
+
+
+    // useEffect(() => {
+    //     if (selectedRow) {
+    //         reset(selectedRow);
+    //     }
+    // }, [selectedRow, reset]);
+
+    const onSubmit = async (data: FormData) => {
+        data.nama_upz = upzName;
         console.log("Submitted data:", data);
+        const { error } = await supabase.from("zakat").insert(data);
+        console.log(error?.message);
+        if (!error) {
+            window.location.reload();
+        }
     };
 
-    // Reset the form when the selected row changes
-    useEffect(() => {
-        reset(selectedRow || {});
-    }, [selectedRow, reset]);
+    const handleNamaUpzChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const id_upz = event.target.value;
+        const upz = upzList.find(upz => upz.id_upz === id_upz);
+        if (upz) {
+            setValue("id_upz", id_upz);
+            setUpzName(upz.nama_upz);
+        }
+        
+    };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="form-layout grid gap-4">
-            <input {...register("nama_upz")} placeholder="Nama UPZ" className="input" />
+            <input {...register("id_upz")} className="input" readOnly />
+            <select {...register("nama_upz")} onChange={handleNamaUpzChange} className="input">
+                <option value="">Select Nama UPZ</option>
+                {upzList.map((upz, index) => (
+                    <option key={index} value={upz.id_upz}>
+                        {upz.nama_upz}
+                    </option>
+                ))}
+            </select>
+
             <input
                 type="number"
                 {...register("jumlah_muzaki")}
@@ -109,7 +167,7 @@ export default function FormZakat() {
                 placeholder="Keterangan"
                 className="input"
             />
-            <button type="submit" className="btn-primary mt-4">
+            <button type="submit" className="btn-primary mt-4 bg-primary m-4">
                 Submit
             </button>
         </form>

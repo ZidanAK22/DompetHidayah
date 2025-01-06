@@ -18,7 +18,7 @@ export default async function adminrefactor() {
     }
 
     return (        
-            <div className="bg-secondary text-text">
+            <div className="rounded-xl bg-secondary text-text p-4">
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt hic modi numquam dolores voluptate ducimus labore impedit fugiat asperiores voluptates, ea accusamus vero, quas mollitia fugit alias iste sit similique!</p>
                 <FormZakat />
                 <DataTable columns={columns} data={data} />
