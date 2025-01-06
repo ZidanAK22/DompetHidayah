@@ -24,18 +24,12 @@ export default function NavbarAdmin({ user }: NavbarAdminProps) {
                 </Link>
 
                 {/* Links */}
-                <div className="flex-grow flex space-x-12 sm:space-x-3 justify-center">
-                    <Link href="/infaqsadaqah" className="text-accent hover:underline">
-                        Infaq & Sadaqah
-                    </Link>
-                    <Link href="/adminzakat" className="text-accent hover:underline">
+                <div className="flex-grow flex space-x-12 sm:space-x-3 justify-center">                    
+                    <Link href="/adminrefactor" className="text-accent hover:underline">
                         Zakat
                     </Link>
-                    <Link href="/adminrefactor" className="text-accent hover:underline">
-                        Refactor
-                    </Link>
                     <Link href="/sadaqahrefactor" className="text-accent hover:underline">
-                        Refactor Sadaqah
+                        Sadaqah & Infaq
                     </Link>
                 </div>
 

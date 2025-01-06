@@ -4,16 +4,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-import { useTableContext } from "@/context/tablecontext"
+import { ActionZakat } from "./zakatAction"
 
 export type ZakatDataSupabase = {
     id_upz: string;
@@ -154,32 +145,7 @@ export const columns: ColumnDef<ZakatDataSupabase>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            const zakat = row.original
-            const { setSelectedRow } = useTableContext();
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open Menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(zakat.id_upz)}
-                        >
-                            Copy Upz Id
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            onClick={() => setSelectedRow(zakat)}
-                        >
-                            Select Row
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
+            <ActionZakat row={row}/>
         }
     },
 ]
