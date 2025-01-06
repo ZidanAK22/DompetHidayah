@@ -44,7 +44,7 @@ export default async function RootLayout({
             <body className={`${inknut.className} min-h-screen`}>
                 <NavbarAdmin user={admin} />
                 <main className="lg:px-24">
-                    <TableProvider>
+                    <TableProvider userInput={admin}>
                         {children}
                     </TableProvider>
                 </main>

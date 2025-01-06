@@ -31,8 +31,14 @@ type UpzItem = {
 };
 
 export default function FormZakat() {
-    const { selectedRow } = useTableContext();
-    const { register, handleSubmit, reset, setValue } = useForm<FormData>({
+    const { selectedRow, userBenul } = useTableContext();
+    const {
+        register,
+        handleSubmit,
+        reset,
+        setValue,        
+        formState: { errors, isSubmitting }
+    } = useForm<FormData>({
         resolver: zodResolver(schema),
         defaultValues: selectedRow || {}, // Default to selected row or empty
     });
@@ -87,12 +93,12 @@ export default function FormZakat() {
             setValue("id_upz", id_upz);
             setUpzName(upz.nama_upz);
         }
-        
+
     };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="form-layout grid gap-4">
-            <input {...register("id_upz")} className="input" readOnly />
+            <input {...register("id_upz")} className="input" readOnly type="hidden" />
             <select {...register("nama_upz")} onChange={handleNamaUpzChange} className="input">
                 <option value="">Select Nama UPZ</option>
                 {upzList.map((upz, index) => (
@@ -108,6 +114,9 @@ export default function FormZakat() {
                 placeholder="Jumlah Muzaki"
                 className="input"
             />
+            {errors.jumlah_muzaki && (
+                <div className="text-red-500">{errors.jumlah_muzaki.message}</div>
+            )}
             <input
                 type="number"
                 {...register("beras_muzaki")}
@@ -167,8 +176,8 @@ export default function FormZakat() {
                 placeholder="Keterangan"
                 className="input"
             />
-            <button type="submit" className="btn-primary mt-4 bg-primary m-4">
-                Submit
+            <button type="submit" className="btn-primary bg-primary w-48 p-4 my-4 rounded-xl">
+                {isSubmitting ? "Submitting" : "Submit"}
             </button>
         </form>
     );

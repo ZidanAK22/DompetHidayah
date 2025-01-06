@@ -34,6 +34,9 @@ export default function NavbarAdmin({ user }: NavbarAdminProps) {
                     <Link href="/adminrefactor" className="text-accent hover:underline">
                         Refactor
                     </Link>
+                    <Link href="/sadaqahrefactor" className="text-accent hover:underline">
+                        Refactor Sadaqah
+                    </Link>
                 </div>
 
                 {/* Profile Dropdown or Login Links */}
@@ -44,6 +47,7 @@ export default function NavbarAdmin({ user }: NavbarAdminProps) {
                         onClick={() => setProfileDropdown(!profileDropdown)}
                     >
                         <span>{user?.email}</span>
+                        <span></span>
                     </div>
                     {profileDropdown && (
                         <div className="absolute right-0 bg-white shadow-md rounded-md py-2 mt-2 w-48">                            
