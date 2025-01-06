@@ -42,7 +42,7 @@ export async function signup(formData: FormData) {
 
     if (error) {
         console.log(error)
-        redirect('/error')
+        redirect(`/error?message=${encodeURIComponent(error.message)}`)
     }
 
     revalidatePath('/', "layout")
