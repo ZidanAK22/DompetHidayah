@@ -110,7 +110,7 @@ export default function FormZakat() {
 
             <input
                 type="number"
-                {...register("jumlah_muzaki")}
+                {...register("jumlah_muzaki", {valueAsNumber: true})}
                 placeholder="Jumlah Muzaki"
                 className="input"
             />
