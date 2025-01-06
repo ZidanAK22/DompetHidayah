@@ -16,6 +16,7 @@ import {
 import { useTableContext } from "@/context/tablecontext"
 import { supabase } from "@/app/utils/supabase/supabase_client"
 import { UUID } from "crypto"
+import { ActionSadaqah } from "./ActionSadaqah"
 
 export type Sadaqah = {
     id_sadaqah_infaq?: number;
@@ -83,54 +84,7 @@ export const columns: ColumnDef<Sadaqah>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            const sadaqah = row.original
-            const { setSelectedSadaqah } = useTableContext();
-
-            async function DeleteSadaqah(id: number) {
-                if (!id) {
-                    return null
-                }
-                const { data, error, status } = await supabase.from('sadaqahinfaq').delete().eq('id_sadaqah_infaq', id);
-                if (error) {
-                    console.error("Error deleting Sadaqah:", error);
-                }
-                else {
-                    console.log("Deleted Sadaqah:", data);
-                    window.location.reload();
-                }
-                console.log("Request status:", status);
-
-            }
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open Menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-[#f2e0b6]">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => {
-                                if (sadaqah.id_sadaqah_infaq !== undefined) {
-                                    DeleteSadaqah(sadaqah.id_sadaqah_infaq);
-                                } else {
-                                    console.error("id_sadaqah_infaq is undefined");
-                                }
-                            }}
-                        >
-                            Delete
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            onClick={() => setSelectedSadaqah(sadaqah)}
-                        >
-                            Select Row
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
+            <ActionSadaqah row={row}/>
         }
     },
 ]

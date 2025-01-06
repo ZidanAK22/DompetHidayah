@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { MoreHorizontal } from "lucide-react"
 
-function ActionCell({ row }: { row: Row<Sadaqah> }) {
+export function ActionSadaqah({ row }: { row: Row<Sadaqah> }) {
     const { setSelectedSadaqah } = useTableContext()
     const sadaqah = row.original
 
